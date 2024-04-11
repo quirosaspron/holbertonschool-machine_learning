@@ -1,9 +1,23 @@
 #!/usr/bin/env python3
+"""Transposes a matrix"""
+
+
 def matrix_transpose(matrix):
-    new_matrix = [[] for row in matrix]
+    """ This will transpose a matrix"""
+    rows = len(matrix)
+    columns = len(matrix[0])
+    new_matrix = [[] for _ in range(columns)]
     for row in matrix:
         count = 0
         for element in row:
             new_matrix[count].append(element)
             count += 1
     return new_matrix
+
+mat1 = [[1, 2], [3, 4]]
+print(mat1)
+print(matrix_transpose(mat1))
+mat2 = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15],
+        [16, 17, 18, 19, 20], [21, 22, 23, 24, 25], [26, 27, 28, 29, 30]]
+print(mat2)
+print(matrix_transpose(mat2))
