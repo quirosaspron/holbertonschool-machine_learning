@@ -3,7 +3,7 @@
 
 
 def add_arrays(arr1, arr2):
-    """Adds two arrays""" 
+    """Adds two arrays"""
     if len(arr1) != len(arr2):
         return None
     suma = []
