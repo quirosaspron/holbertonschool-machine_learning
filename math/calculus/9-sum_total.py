@@ -4,7 +4,7 @@
 
 def summation_i_squared(n):
     """Sums i squared n times"""
-    if not n <= 1:
+    if n < 1 or type(n) != int:
         return None
     else:
         return int((n*(n+1)*(2*n+1))/6)
