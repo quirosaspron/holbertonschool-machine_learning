@@ -19,6 +19,7 @@ class Node:
                                       of the tree.
             depth (int): The depth of the node in the tree.
         """
+
         self.feature = feature
         self.threshold = threshold
         self.left_child = left_child
@@ -34,6 +35,7 @@ class Node:
         Returns:
             int: The maximum depth below the current node.
         """
+
         if self.is_leaf:
             return self.depth
         left_max_depth = 0
@@ -47,6 +49,7 @@ class Node:
 
 class Leaf(Node):
     """Represents a leaf node in a decision tree."""
+
     def __init__(self, value, depth=None):
         """Initializes a Leaf object.
 
@@ -54,6 +57,7 @@ class Leaf(Node):
             value: The predicted value of the leaf node.
             depth (int or None): The depth of the leaf node in the tree.
         """
+
         super().__init__()
         self.value = value
         self.is_leaf = True
@@ -65,11 +69,13 @@ class Leaf(Node):
         Returns:
             int: The depth of the leaf node.
         """
+
         return self.depth
 
 
 class Decision_Tree:
     """Represents a decision tree."""
+
     def __init__(self, max_depth=10, min_pop=1, seed=0,
                  split_criterion="random", root=None):
         """Initializes a Decision_Tree object.
@@ -82,6 +88,7 @@ class Decision_Tree:
             split_criterion (str): The criterion used for splitting nodes.
             root (Node or None): The root node of the decision tree.
         """
+
         self.rng = np.random.default_rng(seed)
         if root:
             self.root = root
@@ -100,4 +107,5 @@ class Decision_Tree:
         Returns:
             int: The maximum depth of the entire tree.
         """
+
         return self.root.max_depth_below()
