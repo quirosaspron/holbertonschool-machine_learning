@@ -2,6 +2,7 @@
 import numpy as np
 """Builds a decision tree"""
 
+
 class Node:
     '''The node class'''
     def __init__(self, feature=None, threshold=None, left_child=None,
