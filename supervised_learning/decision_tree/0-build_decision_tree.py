@@ -4,10 +4,10 @@ import numpy as np
 
 
 class Node:
-    '''The node class'''
+    """The node class"""
     def __init__(self, feature=None, threshold=None, left_child=None,
                  right_child=None, is_root=False, depth=0):
-        '''Initiates the node'''
+        """Initiates the node"""
         self.feature = feature
         self.threshold = threshold
         self.left_child = left_child
@@ -18,7 +18,7 @@ class Node:
         self.depth = depth
 
     def max_depth_below(self):
-        '''Gets the max depth below the current node'''
+        """Gets the max depth below the current node"""
         if self.is_leaf is True:
             return self.depth
         left_max_depth = 0
@@ -31,24 +31,24 @@ class Node:
 
 
 class Leaf(Node):
-    '''The leaf class'''
+    """The leaf class"""
     def __init__(self, value, depth=None):
-        '''Initiates the leaf'''
+        """Initiates the leaf"""
         super().__init__()
         self.value = value
         self.is_leaf = True
         self.depth = depth
 
     def max_depth_below(self):
-        '''Gets the depth of the leaf'''
+        """Gets the depth of the leaf"""
         return self.depth
 
 
 class Decision_Tree():
-    '''The decision tree class'''
+    """The decision tree class"""
     def __init__(self, max_depth=10, min_pop=1, seed=0,
                  split_criterion="random", root=None):
-        '''Inititates the decision tree'''
+        """Inititates the decision tree"""
         self.rng = np.random.default_rng(seed)
         if root:
             self.root = root
@@ -62,5 +62,5 @@ class Decision_Tree():
         self.predict = None
 
     def depth(self):
-        '''Gets the maximum depth of the entire tree'''
+        """Gets the maximum depth of the entire tree"""
         return self.root.max_depth_below()
