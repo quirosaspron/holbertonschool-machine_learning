@@ -51,7 +51,7 @@ class Node:
 
     def right_child_add_prefix(self, text):
         """Adds the prefix of the right child"""
-        lines = split("\n")
+        lines = text.split("\n")
         new_text = "    +--" + lines[0]
         for x in lines[1:]:
             new_text += "\n       " + x
