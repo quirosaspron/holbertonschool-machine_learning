@@ -74,6 +74,11 @@ class Node:
         right_child_str = self.right_child_add_prefix(str(self.right_child))
         return f"{node_text}\n{left_child_str}{right_child_str}"
 
+    def get_leaves_below(self):
+        """Gets the leaves below this node"""
+        return (self.left_child.get_leaves_below()
+                + self.right_child.get_leaves_below())
+
 
 class Leaf(Node):
     """The leaf class"""
@@ -93,6 +98,10 @@ class Leaf(Node):
 
     def __str__(self):
         return (f"-> leaf [value={self.value}] ")
+
+    def get_leaves_below(self):
+        """Gets the leaves below this node"""
+        return [self]
 
 
 class Decision_Tree():
@@ -121,3 +130,7 @@ class Decision_Tree():
 
     def __str__(self):
         return self.root.__str__()
+
+    def get_leaves(self):
+        """Returns the list of all leaves of the tree"""
+        return self.root.get_leaves_below()
