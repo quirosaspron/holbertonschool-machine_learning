@@ -1,25 +1,20 @@
 #!/usr/bin/env python3
+"""depth of a decision tree"""
 import numpy as np
 
 
 class Node:
-    """Represents a node in a decision tree."""
+    """representing a node in a decision tree
+    Attributes:
+        feature: int representing the index of the feature to make a decision
+        threshold: float threshold for the feature
+        left_child: left node in the decision tree
+        right_child: right node in the decision tree
+        is_leaf: bool indicating if the node is a leaf
+        is_root: bool indicating if the node is the root
+        depth: depth of the node in the tree"""
     def __init__(self, feature=None, threshold=None, left_child=None,
                  right_child=None, is_root=False, depth=0):
-        """Initializes a Node object.
-
-        Args:
-            feature (int or None): The index of the feature
-                                    used for splitting.
-            threshold (float or None): The threshold value
-                                       for splitting the data.
-            left_child (Node or None): The left child node.
-            right_child (Node or None): The right child node.
-            is_root (bool): Indicates if the node is the root
-                                      of the tree.
-            depth (int): The depth of the node in the tree.
-        """
-
         self.feature = feature
         self.threshold = threshold
         self.left_child = left_child
@@ -30,65 +25,43 @@ class Node:
         self.depth = depth
 
     def max_depth_below(self):
-        """Returns the maximum depth below the current node.
-
-        Returns:
-            int: The maximum depth below the current node.
-        """
-
+        """calculate the maximum depth below the current node"""
         if self.is_leaf:
             return self.depth
-        left_max_depth = 0
-        right_max_depth = 0
-        if self.left_child:
-            left_max_depth = self.left_child.max_depth_below()
-        if self.right_child:
-            right_max_depth = self.right_child.max_depth_below()
-        return max(left_max_depth, right_max_depth)
+        else:
+            return max(self.left_child.max_depth_below(),
+                       self.right_child.max_depth_below())
 
 
 class Leaf(Node):
-    """Represents a leaf node in a decision tree."""
-
+    """representing a leaf in a decision tree
+    Attributes:
+        value: value to be returned when the leaf is reached
+        depth: depth of the node in the tree"""
     def __init__(self, value, depth=None):
-        """Initializes a Leaf object.
-
-        Args:
-            value: The predicted value of the leaf node.
-            depth (int or None): The depth of the leaf node in the tree.
-        """
-
         super().__init__()
         self.value = value
         self.is_leaf = True
         self.depth = depth
 
     def max_depth_below(self):
-        """Returns the depth of the leaf node.
-
-        Returns:
-            int: The depth of the leaf node.
-        """
-
+        """calculate the maximum depth below the current node"""
         return self.depth
 
 
-class Decision_Tree:
-    """Represents a decision tree."""
-
+class Decision_Tree():
+    """representing a decision tree
+    Attributes:
+        root: root node of the decision tree
+        explanatory: numpy.ndarray of shape (m, n) containing the input data
+        target: numpy.ndarray of shape (m,) containing the target data
+        max_depth: int representing the maximum depth of the tree
+        min_pop: int representing the minimum number of data points in a node
+        seed: int for the random number generator
+        split_criterion: string representing the type of split criterion
+        predict: method to predict the value of a data point"""
     def __init__(self, max_depth=10, min_pop=1, seed=0,
                  split_criterion="random", root=None):
-        """Initializes a Decision_Tree object.
-
-        Args:
-            max_depth (int): The maximum depth of the decision tree.
-            min_pop (int): The minimum number of samples required
-                           to split a node.
-            seed (int): The seed value for random number generation.
-            split_criterion (str): The criterion used for splitting nodes.
-            root (Node or None): The root node of the decision tree.
-        """
-
         self.rng = np.random.default_rng(seed)
         if root:
             self.root = root
@@ -102,10 +75,5 @@ class Decision_Tree:
         self.predict = None
 
     def depth(self):
-        """Returns the maximum depth of the entire tree.
-
-        Returns:
-            int: The maximum depth of the entire tree.
-        """
-
+        """calculate the depth of the decision tree"""
         return self.root.max_depth_below()
