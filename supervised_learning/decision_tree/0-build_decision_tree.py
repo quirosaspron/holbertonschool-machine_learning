@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import numpy as np
 
+
 class Node:
     """Represents a node in a decision tree."""
     def __init__(self, feature=None, threshold=None, left_child=None,
@@ -8,11 +9,14 @@ class Node:
         """Initializes a Node object.
 
         Args:
-            feature (int or None): The index of the feature used for splitting.
-            threshold (float or None): The threshold value for splitting the data.
+            feature (int or None): The index of the feature
+                                    used for splitting.
+            threshold (float or None): The threshold value
+                                       for splitting the data.
             left_child (Node or None): The left child node.
             right_child (Node or None): The right child node.
-            is_root (bool): Indicates if the node is the root of the tree.
+            is_root (bool): Indicates if the node is the root
+                                      of the tree.
             depth (int): The depth of the node in the tree.
         """
         self.feature = feature
@@ -72,7 +76,8 @@ class Decision_Tree:
 
         Args:
             max_depth (int): The maximum depth of the decision tree.
-            min_pop (int): The minimum number of samples required to split a node.
+            min_pop (int): The minimum number of samples required
+                           to split a node.
             seed (int): The seed value for random number generation.
             split_criterion (str): The criterion used for splitting nodes.
             root (Node or None): The root node of the decision tree.
@@ -96,4 +101,3 @@ class Decision_Tree:
             int: The maximum depth of the entire tree.
         """
         return self.root.max_depth_below()
-
