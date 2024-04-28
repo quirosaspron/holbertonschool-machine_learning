@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def gradient():
     """Plots a scatter plot"""
     np.random.seed(5)
