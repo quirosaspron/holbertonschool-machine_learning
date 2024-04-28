@@ -124,6 +124,7 @@ class Leaf(Node):
         return [self]
 
     def update_bounds_below(self):
+        """It updates the upper and lower bounds of the nodes"""
         pass
 
 
@@ -159,4 +160,5 @@ class Decision_Tree():
         return self.root.get_leaves_below()
 
     def update_bounds(self):
+        """It updates the upper and lower bounds of the nodes"""
         self.root.update_bounds_below()
