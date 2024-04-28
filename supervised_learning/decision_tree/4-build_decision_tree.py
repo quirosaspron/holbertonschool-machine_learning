@@ -80,6 +80,7 @@ class Node:
                 + self.right_child.get_leaves_below())
 
     def update_bounds_below(self):
+        """It updates the upper and lower bounds of the nodes"""
         if self.is_root:
             self.upper = {0: np.inf}
             self.lower = {0: -np.inf}
