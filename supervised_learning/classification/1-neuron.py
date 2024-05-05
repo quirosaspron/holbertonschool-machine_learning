@@ -15,14 +15,17 @@ class Neuron:
         self.__b = 0
         self.__A = 0
 
+    @property
     def W(self):
         """Gets the weight attribute"""
         return self.__W
 
+    @property
     def b(self):
         """Gets the bias attribute"""
         return self.__b
 
+    @property
     def A(self):
         """Gets the activated output attribute"""
         return self.__A
