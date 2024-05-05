@@ -47,8 +47,5 @@ class Neuron:
         """Evaluates the neuron's predictions"""
         self.forward_prop(X)
         cost = self.cost(Y, self.__A)
-        predictions = np.zeros((1, Y.shape[1]))
-        for i in range(0, self.__A.shape[1]):
-            if self.__A[0][i] >= 0.5:
-                predictions[0][i] = 1
+        predictions = np.where(self.__A >= 0.5, 1, 0)
         return predictions, cost
