@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
+"""Contains a single neuron class performing binary classification"""
 import numpy as np
-"""Contains a single neuron class"""
 
 
 class Neuron:
