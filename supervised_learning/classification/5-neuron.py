@@ -53,8 +53,8 @@ class Neuron:
     def gradient_descent(self, X, Y, A, alpha=0.05):
         """Computes the gradient descent"""
         m = X.shape[1]
-        dz = Y - A
+        dz = A - Y
         dw = 1/m * np.dot(dz, X.T)
         db = 1/m * np.sum(dz)
         self.__W = self.__W - alpha * dw
-        self.__b = self.__b - alpha * db    
+        self.__b = self.__b - alpha * db
