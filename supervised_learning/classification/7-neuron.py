@@ -86,7 +86,7 @@ class Neuron:
                     cst = self.cost(Y, self.__A)
                     print(f'Cost after {i} iterations: {cst}')
         if graph:
-            x_iterations = [i for i in range(iterations)]
+            x_iterations = [i for i in range(iterations // step)]
             plt.plot(x_iterations, y_costs, color='skyblue')
             plt.xlabel('iteration')
             plt.ylabel('cost')
