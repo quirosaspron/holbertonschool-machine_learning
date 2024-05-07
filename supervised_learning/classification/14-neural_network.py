@@ -64,14 +64,14 @@ class NeuralNetwork():
     def cost(self, Y, A):
         """Calculates the cost of the model with logreg"""
         m = Y.shape[1]
-        cost = -1/m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
-        return cost
+        cost_function = Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A)
+        return 1 / m * np.sum(- cost_function)
 
     def evaluate(self, X, Y):
         """Evaluates the neural network's predictions"""
-        self.forward_prop(X)
-        cost = self.cost(Y, self.__A2)
-        predictions = np.where(self.__A2 >= 0.5, 1, 0)
+        A1, A2 = self.forward_prop(X)
+        cost = self.cost(Y, A2)
+        predictions = np.where(A2 >= 0.5, 1, 0)
         return predictions, cost
 
     def gradient_descent(self, X, Y, A1, A2, alpha=0.05):
