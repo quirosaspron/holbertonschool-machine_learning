@@ -65,7 +65,7 @@ class Neuron:
         """Trains the neuron"""
         if not isinstance(iterations, int):
             raise TypeError('iterations must be an integer')
-        if iterations < 0:
+        if iterations <= 0:
             raise ValueError('iterations must be a positive integer')
         if not isinstance(alpha, float):
             raise TypeError('alpha must be a float')
@@ -78,7 +78,7 @@ class Neuron:
                 raise ValueError('step must be positive and <= iterations')
         y_costs = []
         for i in range(iterations):
-            output = self.forward_prop(X)
+            self.forward_prop(X)
             self.gradient_descent(X, Y, self.__A, alpha)
             if i % step == 0:
                 y_costs.append(self.cost(Y, self.__A))
