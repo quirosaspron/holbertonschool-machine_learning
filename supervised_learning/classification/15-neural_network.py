@@ -112,7 +112,7 @@ class NeuralNetwork():
                 raise ValueError('step must be positive and <= iterations')
         y_costs = []
         for i in range(0, iterations): 
-            output = self.forward_prop(X)
+            self.forward_prop(X)
             self.gradient_descent(X, Y, self.__A1, self.__A2, alpha)
             if i % step == 0:
                 y_costs.append(self.cost(Y, self.__A2))
