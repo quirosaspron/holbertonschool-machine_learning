@@ -80,11 +80,11 @@ class NeuralNetwork():
 
         dz2 = A2 - Y
         dW2 = 1/m * np.dot(dz2, A1.T)
-        db2 = 1/m * np.sum(dz2)
+        db2 = 1/m * np.sum(dz2, axis=1, keepdims=True)
 
         dz1 = np.dot(self.__W2.T, dz2) * A1 * (1 - A1)
         dW1 = 1/m * np.dot(dz1, X.T)
-        db1 = 1/m * np.sum(dz1)
+        db1 = 1/m * np.sum(dz1, axis=1, keepdims=True)
 
         self.__W2 = self.__W2 - alpha * dW2
         self.__b2 = self.__b2 - alpha * db2
@@ -102,7 +102,9 @@ class NeuralNetwork():
             raise TypeError('alpha must be a float')
         if alpha <= 0:
             raise ValueError('alpha must be positive')
+
         for i in range(iterations):
             A1, A2 = self.forward_prop(X)
             self.gradient_descent(X, Y, A1, A2, alpha)
+
         return self.evaluate(X, Y)
