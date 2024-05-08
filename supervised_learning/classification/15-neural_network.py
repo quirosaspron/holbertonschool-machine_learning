@@ -114,7 +114,7 @@ class NeuralNetwork():
         for i in range(0, iterations): 
             self.forward_prop(X)
             self.gradient_descent(X, Y, self.__A1, self.__A2, alpha)
-            if i % step == 0:
+            if i % step == 0 or i == iterations:
                 y_costs.append(self.cost(Y, self.__A2))
                 if verbose:
                     cst = self.cost(Y, self.__A2)
