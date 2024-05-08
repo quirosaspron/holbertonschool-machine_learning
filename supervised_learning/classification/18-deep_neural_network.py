@@ -49,6 +49,10 @@ class DeepNeuralNetwork():
         """Performs the forward propagation"""
         self.__cache['A0'] = X
         for i in range(self.__L):
-            activation = np.dot(self.__weights[f'W{i+1}'], self.__cache[f'A{i}']) + self.__weights[f'b{i+1}']
+            W = 'W' + str(i+1)
+            b = 'b' + str(i+1)
+            A = 'A' + str(i)
+            activation = np.dot(self.__weights[W],
+                                self.__cache[A]) + self.__weights[b]
             self.__cache[f'A{i+1}'] = 1 / (1 + np.exp(-activation))
         return self.__cache[f'A{self.__L}'], self.__cache
