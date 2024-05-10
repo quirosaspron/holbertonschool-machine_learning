@@ -83,4 +83,3 @@ class DeepNeuralNetwork():
             dz = np.dot(W.T, dz) * (A_prev * (1 - A_prev))
             self.__weights[f'W{i}'] -= alpha * dW
             self.__weights[f'b{i}'] -= alpha * db
-
