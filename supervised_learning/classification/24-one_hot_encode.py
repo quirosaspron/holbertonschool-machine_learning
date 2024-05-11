@@ -12,5 +12,7 @@ def one_hot_encode(Y, classes):
         return None
     one_hot = np.zeros((classes, m))
     for i in range(m):
+        Y[i] < 0 or Y[i] >= classes:
+            return None
         one_hot[Y[i], i] = 1
     return one_hot
