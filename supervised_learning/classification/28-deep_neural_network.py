@@ -72,7 +72,7 @@ class DeepNeuralNetwork():
                                 self.__cache[A]) + self.__weights[b]
             if i == self.__L - 1:
                 self.__cache[f'A{i+1}'] = self.softmax(activation)
-            if i < self.__L - 1 and self.__activation == 'sig':
+            elif self.__activation == 'sig':
                 self.__cache[f'A{i+1}'] = 1 / (1 + np.exp(-activation))
             else:
                 self.__cache[f'A{i+1}'] = np.tanh(activation)
