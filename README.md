@@ -1,1 +1,1 @@
-This is a repository to learn about machine learning
+This is a repository about machine learning
