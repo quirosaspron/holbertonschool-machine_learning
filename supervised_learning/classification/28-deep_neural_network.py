@@ -75,18 +75,13 @@ class DeepNeuralNetwork():
             if i < self.__L - 1 and self.__activation == 'sig':
                 self.__cache[f'A{i+1}'] = 1 / (1 + np.exp(-activation))
             else:
-                act = activation
-                denominator = np.exp(act) + np.exp(-act)
-                numerator = np.exp(act) - np.exp(-act)
-                self.__cache[f'A{i+1}'] = numerator / denominator
+                self.__cache[f'A{i+1}'] = np.tanh(activation)
         return self.__cache[f'A{self.__L}'], self.__cache
 
     def cost(self, Y, A):
         """Calculates the cost of the model with cross entropy"""
         m = Y.shape[1]
-        epsilon = 1e-15
-        clipped_A = np.clip(A, epsilon, 1 - epsilon)
-        cost_function = -1 / m * np.sum(Y * np.log(clipped_A))
+        cost_function = -1 / m * np.sum(Y * np.log(A))
         return cost_function
 
     def evaluate(self, X, Y):
