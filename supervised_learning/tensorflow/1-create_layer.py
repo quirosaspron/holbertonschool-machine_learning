@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Creates a layer"""
 import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 
 def create_layer(prev, n, activation):
