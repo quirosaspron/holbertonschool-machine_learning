@@ -8,7 +8,8 @@ calculate_loss = __import__('4-calculate_loss').calculate_loss
 create_train_op = __import__('5-create_train_op').create_train_op
 
 
-def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations, alpha, iterations, save_path="/tmp/model.ckpt"):
+def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
+          activations, alpha, iterations, save_path="/tmp/model.ckpt"):
     """Builds, trains and saves  a neural net"""
     m, nx = X_train.shape
     classes = Y_train.shape[1]
