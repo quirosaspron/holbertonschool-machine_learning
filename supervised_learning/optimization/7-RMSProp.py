@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """sets up gd with momentum in TensorFlow"""
+import numpy as np
 import tensorflow as tf
 
 
