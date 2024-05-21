@@ -7,6 +7,8 @@ precision = __import__('2-precision').precision
 
 def f1_score(confusion):
     """Calculates the F1 score for each class in a confusion matrix"""
-    sens = sensitivity(confusion)
-    prec = precision(confusion)
-    return sens * prec / (sens + prec)
+    classes = confusion.shape[0]
+    total = np.sum(confusion)
+    F1 = 2 * (precision(confusion) * sensitivity(confusion))\
+        / (precision(confusion) + sensitivity(confusion))
+    return F1
