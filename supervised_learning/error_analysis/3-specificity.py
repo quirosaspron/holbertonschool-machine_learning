@@ -18,5 +18,4 @@ def specificity(confusion):
                 if i != r and j == r:
                     false_positives += confusion[i][j]
         specificity[r] = true_negatives / (true_negatives + false_positives)
-    
     return specificity
