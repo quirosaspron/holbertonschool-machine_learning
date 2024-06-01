@@ -6,4 +6,4 @@ import tensorflow as tf
 def l2_reg_cost(cost, model):
     """Returns: Tensor with the L2 cost for each layer"""
     l2_losses = model.losses
-    return cost + l2_losses     
+    return cost + l2_losses
