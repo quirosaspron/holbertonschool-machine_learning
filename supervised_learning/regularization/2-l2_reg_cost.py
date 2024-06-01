@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """calculates the cost with L2 regularization"""
-import numpy as np
 import tensorflow as tf
 
 
