@@ -24,4 +24,4 @@ def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
 
         if layer > 1:
             dA_prev = np.matmul(W.T, dZ)
-            dZ = dA_prev * (1 - A_prev ** 2)    
+            dZ = dA_prev * (1 - A_prev ** 2)
