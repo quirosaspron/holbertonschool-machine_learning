@@ -1,4 +1,4 @@
-i#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Converts a label vector into a one-hot matrix
 """
