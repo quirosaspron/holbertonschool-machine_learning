@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
+""" this projet is about keras
 """
-Trains a model using mini-batch gradient descent
-"""
-
 import tensorflow.keras as K
 
 
-def train_model(network, data, labels, batch_size, epochs, verbose=True,
-                shuffle=False):
+def train_model(network, data, labels, batch_size, epochs,
+                verbose=True, shuffle=False):
     """
-    Trains a model using mini-bath gradient descent
+    this is the task 4, train a model
     """
-    history = network.fit(
-        data,
-        labels,
-        batch_size=batch_size,
-        epochs=epochs,
-        verbose=verbose,
-        shuffle=shuffle
-    )
+
+    history = network.fit(data, labels, epochs=epochs, batch_size=batch_size,
+                          verbose=verbose, shuffle=shuffle)
+
+    if verbose is False:
+        valuesloss = [float("{:.5f}".format(x))
+                      for x in history.history["loss"]]
+        valueaccurate = [float("{:.5f}".format(x))
+                         for x in history.history["accuracy"]]
+
     return history
