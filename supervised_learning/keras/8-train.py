@@ -1,53 +1,58 @@
-i#!/usr/bin/env python3
+#!/usr/bin/env python3
+""" this projet is about keras
 """
-Trains a model using mini-batch gradient descent with
-optional validation data, early stopping, learning rate decay,
-and model checkpointing to save the best iteration.
-"""
-
 import tensorflow.keras as K
 
 
 def train_model(network, data, labels, batch_size, epochs,
-                validation_data=None, early_stopping=False, patience=0,
-                learning_rate_decay=False, alpha=0.1, decay_rate=1,
-                save_best=False, filepath=None, verbose=True, shuffle=False):
+                validation_data=None, early_stopping=False,
+                patience=0, learning_rate_decay=False, alpha=0.1,
+                decay_rate=1, save_best=False, filepath=None,
+                verbose=True, shuffle=False):
     """
-    Trains a model using mini-batch gradient descent.
+    this is the task 8, select the best model"
     """
-    callbacks = []
+    if save_best:
+        callback_check = K.callbacks.ModelCheckpoint(
+                         filepath=filepath,
+                         monitor='val_loss',
+                         verbose=0,
+                         save_best_only=True,
+                         save_weights_only=False,
+                         mode='auto',
+                         save_freq='epoch',
+                         initial_value_threshold=None
+                         )
 
-    # Early stopping
-    if early_stopping and validation_data is not None:
-        early_stopping_callback = K.callbacks.EarlyStopping(
-                monitor='val_loss', patience=patience,
-                restore_best_weights=True
-                )
-        callbacks.append(early_stopping_callback)
+    if validation_data is None:
+        history = network.fit(data, labels, epochs=epochs,
+                              batch_size=batch_size,
+                              verbose=False, shuffle=shuffle,
+                              validation_data=validation_data)
 
-    # Learning rate decay
-    if learning_rate_decay and validation_data is not None:
-        def schedule(epoch):
-            return alpha / (1 + decay_rate * epoch)
+    else:
 
-        lr_decay_callback = K.callbacks.LearningRateScheduler(
-                schedule, verbose=1
-                )
-        callbacks.append(lr_decay_callback)
+        # Define your learning rate schedule function with inverse time decay
+        def lr_schedule(epoch):
+            """
+            Inverse Time Decay Learning Rate Schedule
+            """
+            learning_rate = alpha / (1 + decay_rate * epoch)
 
-    # Model checkpoint
-    if save_best and validation_data is not None and filepath is not None:
-        checkpoint_callback = K.callbacks.ModelCheckpoint(
-                filepath=filepath, monitor='val_loss',
-                save_best_only=True, mode='min'
-                )
-        callbacks.append(checkpoint_callback)
+            return learning_rate
 
-    history = network.fit(data, labels,
-                          batch_size=batch_size,
-                          epochs=epochs,
-                          verbose=verbose,
-                          shuffle=shuffle,
-                          validation_data=validation_data,
-                          callbacks=callbacks)
+        # callback early Stopping when back propgation is null
+        callback_early = K.callbacks.EarlyStopping(patience=patience)
+        # callback decay inverse time
+        callback_invertime_decay = K.callbacks.\
+            LearningRateScheduler(lr_schedule, verbose=False)
+
+        history = network.fit(data, labels,
+                              epochs=epochs, batch_size=batch_size,
+                              verbose=verbose, shuffle=shuffle,
+                              validation_data=validation_data,
+                              callbacks=[callback_early,
+                                         callback_invertime_decay,
+                                         callback_check])
+
     return history
