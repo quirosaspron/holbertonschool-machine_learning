@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
+"""Builds a resnet network"""
 from tensorflow import keras as K
 identity_block = __import__('2-identity_block').identity_block
 projection_block = __import__('3-projection_block').projection_block
 
 
 def resnet50():
+    """
+    Builds the ResNet-50 architecture as described in
+    'Deep Residual Learning for Image Recognition' (2015).
+
+    Returns:
+    - The Keras model
+    """
     he_normal = K.initializers.HeNormal(seed=0)
     input_layer = K.Input(shape=(224, 224, 3))
     conv1 = K.layers.Conv2D(64,

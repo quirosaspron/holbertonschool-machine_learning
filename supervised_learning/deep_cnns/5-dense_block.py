@@ -1,8 +1,29 @@
 #!/usr/bin/env python3
+"""Builds a dense block"""
 from tensorflow import keras as K
 
 
 def dense_block(X, nb_filters, growth_rate, layers):
+    """
+    Builds a dense block as described in
+    'Densely Connected Convolutional Networks' (2016)'
+
+    Parameters:
+    X : tensor
+        The output of the previous layer.
+    nb_filters : int
+        The number of filters in X.
+    growth_rate : int
+        The growth rate for the dense block.
+    layers : int
+        The number of layers in the dense block.
+
+    Returns:
+    tensor, int
+        The concatenated output of each layer within the Dense Block
+        and the number of filters within the concatenated outputs,
+        respectively.
+    """
     he_normal = K.initializers.HeNormal(seed=0)
 
     for i in range(layers):
