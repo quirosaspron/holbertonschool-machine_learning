@@ -48,5 +48,8 @@ def projection_block(A_prev, filters, s=2):
                                      padding='same',
                                      kernel_initializer=init)(A_prev)
     shortcut_layer = K.layers.BatchNormalization(axis=-1)(shortcut_layer)
-    layer_3 = K.layers.Activation('relu')(layer_3 + shortcut_layer)
-    return layer_3
+    # Merge output of main path and shortcut path
+    merged = K.layers.Add()([norm3, norm_shortcut])
+
+    # Return activated output of merge, using ReLU.
+    return K.layers.Activation(activation="relu")(merged)
