@@ -13,7 +13,7 @@ def densenet121(growth_rate=32, compression=1.0):
     Builds the DenseNet-121 architecture as described in
     'Densely Connected Convolutional Networks'.
 
-    Parameters:
+    parameters:
     growth_rate (int): The growth rate for the dense blocks.
     compression (float): The compression factor for the transition layers.
 
