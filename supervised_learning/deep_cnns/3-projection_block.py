@@ -44,12 +44,12 @@ def projection_block(A_prev, filters, s=2):
     layer_3 = K.layers.Conv2D(F12, (1, 1), padding='same',
                               kernel_initializer=init)(layer_2)
     layer_3 = K.layers.BatchNormalization(axis=-1)(layer_3)
-    shortcut_layer = K.layers.Conv2D(filters[2], (1, 1), strides=(s, s),
+    shortcut_layer = K.layers.Conv2D(F12, (1, 1), strides=(s, s),
                                      padding='same',
                                      kernel_initializer=init)(A_prev)
     shortcut_layer = K.layers.BatchNormalization(axis=-1)(shortcut_layer)
     # Merge output of main path and shortcut path
-    merged = K.layers.Add()([norm3, norm_shortcut])
+    merged = K.layers.Add()([layer_3, shortcut_layer])
 
     # Return activated output of merge, using ReLU.
     return K.layers.Activation(activation="relu")(merged)
