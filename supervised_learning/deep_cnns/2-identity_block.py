@@ -39,6 +39,7 @@ def identity_block(A_prev, filters):
     layer_3 = K.layers.Conv2D(F12, (1, 1), padding='same',
                               kernel_initializer=init)(layer_2)
     layer_3 = K.layers.BatchNormalization(axis=-1)(layer_3)
-    layer_3 = K.layers.Activation('relu')(layer_3 + A_prev)
+    merged = K.layers.Add()([layer_3, A_prev])
 
-    return layer_3
+    # Return activated output of merge, using ReLU
+    return K.layers.Activation(activation="relu")(merged)
