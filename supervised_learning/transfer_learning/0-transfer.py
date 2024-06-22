@@ -1,64 +1,84 @@
 #!/usr/bin/env python3
+"""
+    Transfer Learning with Keras
+    Model to use:  Inception_Resnet_V2
+"""
+
+import tensorflow.keras as K
 import tensorflow as tf
-from tensorflow import keras as K
-import matplotlib.pyplot as plt
+
 
 def preprocess_data(X, Y):
-    resized_images = []
-    for image in X:
-        resized_image = tf.image.resize(image, [224, 224])
-        resized_images.append(resized_image.numpy())
-    return np.array(resized_images), Y
+    """
+        trains a convolutional neural network to classify the CIFAR 10 dataset
 
-(X_train, y_train), (X_test, y_test) = K.datasets.cifar10.load_data()
-X_train, X_test = X_train / 255.0, X_test / 255.0
-y_train = K.utils.to_categorical(y_train, 10)
-y_test = K.utils.to_categorical(y_test, 10)
-X_train_resized, y_train_resized = preprocess_data(X_train, y_train)
-X_test_resized, y_test_resized = preprocess_data(X_test, y_test)
+        :param X: ndarray, shape(m, 32, 32, 3) containing CIFAR 10 images
+        :param Y: ndarray, shape(m, ) containing CIFAR 10 labels for X
 
-base_model = K.applications.resnet50.ResNet50(weights='imagenet', include_top=False)
+        :return: X_p, Y_p
+            X_p: ndarray containing preprocessed X
+            Y_p: ndarray containing preprocessed Y
+    """
+    X = K.applications.inception_resnet_v2.preprocess_input(X)
+    y = K.utils.to_categorical(Y, 10)
+    return X, y
 
-for layer in base_model.layers:
-    layer.trainable = False
 
-x = base_model.output
-x = K.layers.GlobalAveragePooling2D()(x)
-x = K.layers.Dense(1024, activation='relu')(x)
-predictions = K.layers.Dense(10, activation='softmax')(x)
+if __name__ == "__main__":
+    # load data
+    (X_train, y_train), (X_test, y_test) = K.datasets.cifar10.load_data()
 
-model = K.models.Model(inputs=base_model.input, outputs=predictions)
-model.compile(optimizer=K.optimizers.Adam(), loss='categorical_crossentropy', metrics=['accuracy'])
-history = model.fit(X_train_resized, y_train, batch_size=32, epochs=10, validation_data=(X_test_resized, y_test))
+    # preprocessing
+    X_train, y_train = preprocess_data(X_train, y_train)
+    X_test, y_test = preprocess_data(X_test, y_test)
 
-for layer in base_model.layers[-10:]:
-    layer.trainable = True
+    # create model
+    base_model = K.applications.InceptionResNetV2(weights='imagenet',
+                                                  include_top=False,
+                                                  input_shape=(299, 299, 3))
 
-model.compile(optimizer=Adam(lr=1e-5), loss='categorical_crossentropy', metrics=['accuracy'])
-history_fine = model.fit(X_train_resized, y_train, batch_size=32, epochs=10, validation_data=(X_test_resized, y_test))
+    # input resizing
+    inputs = K.Input(shape=(32, 32, 3))
+    input = K.layers.Lambda(lambda image: tf.image.resize(image, (299, 299)))(inputs)
+    # Base model
+    x = base_model(input, training=False)
+    """
+    # freeze some layer (before 633)
+    for layer in base_model.layers[:633]:
+        layer.trainable = False
 
-history.history['loss'].extend(history_fine.history['loss'])
-history.history['val_loss'].extend(history_fine.history['val_loss'])
-history.history['accuracy'].extend(history_fine.history['accuracy'])
-history.history['val_accuracy'].extend(history_fine.history['val_accuracy'])
+    for layer in base_model.layers[633:]:
+        layer.trainable = True
+    """
+    for layer in base_model.layers:
+        layer.trainable = False
+    # Add layers
+    x = K.layers.GlobalAveragePooling2D()(x)
+    x = K.layers.Dense(288, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.001))(x)
+    x = K.layers.Dropout(0.3)(x)
+    outputs = K.layers.Dense(10, activation='softmax')(x)
 
-# Plot the training and validation loss
-plt.figure(figsize=(12, 8))
-plt.plot(history.history['loss'], label='Training Loss')
-plt.plot(history.history['val_loss'], label='Validation Loss')
-plt.title('Training and Validation Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.legend()
-plt.show()
+    # construct model
+    model = K.Model(inputs, outputs)
 
-# Plot the training and validation accuracy
-plt.figure(figsize=(12, 8))
-plt.plot(history.history['accuracy'], label='Training Accuracy')
-plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
-plt.title('Training and Validation Accuracy')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.legend()
-plt.show()
+    # architecture final model
+    model.summary()
 
+    # Compile the model
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
+                  loss='categorical_crossentropy',
+                  metrics=['accuracy'])
+
+    # fit model
+    history = model.fit(X_train, y_train,
+                        validation_data=(X_test, y_test),
+                        batch_size=300,
+                        epochs=4,
+                        verbose=1)
+
+    # save model
+    model.save("cifar10.h5")
+
+    # evaluate model
+    results = model.evaluate(X_test, y_test)
+    print("test loss, test acc:", results)
