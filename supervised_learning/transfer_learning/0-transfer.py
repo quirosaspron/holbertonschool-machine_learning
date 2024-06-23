@@ -7,11 +7,9 @@
 import tensorflow.keras as K
 import tensorflow as tf
 
-
 def preprocess_data(X, Y):
     """
-        trains a convolutional neural network to classify the CIFAR 10 dataset
-
+        pre-processes the data for your model
         :param X: ndarray, shape(m, 32, 32, 3) containing CIFAR 10 images
         :param Y: ndarray, shape(m, ) containing CIFAR 10 labels for X
 
@@ -22,7 +20,6 @@ def preprocess_data(X, Y):
     X = K.applications.inception_resnet_v2.preprocess_input(X)
     y = K.utils.to_categorical(Y, 10)
     return X, y
-
 
 if __name__ == "__main__":
     # load data
