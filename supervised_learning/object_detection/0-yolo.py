@@ -17,4 +17,4 @@ class Yolo:
     def load_list(self, file_path):
         """Loads a .txt file into a list"""
         with open(file_path, 'r') as file:
-            return file.read().strip().split('n')
+            return file.read().strip().split('\n')
