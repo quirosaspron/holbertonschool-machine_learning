@@ -73,6 +73,7 @@ class Yolo:
             confidence = confidence.reshape(grid_height, grid_width,
                                             anchor_boxes, 1)
             box_confidence.append(confidence)
+            box_class_probs_array = K.activations.sigmoid(output[..., 5:])
             box_class_probs.append(box_class_probs_array.numpy())
 
         return boxes, box_confidence, box_class_probs
