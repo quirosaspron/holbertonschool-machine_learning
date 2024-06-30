@@ -194,7 +194,7 @@ class Yolo:
     def preprocess_images(self, images):
         """
         Resizes (modifies height and width)
-        and rescales (normalizing to range [0,1]) 
+        and rescales (normalizing to range [0,1])
         images for input to darket.
         """
         pimages = []
