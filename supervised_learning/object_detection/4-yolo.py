@@ -5,6 +5,7 @@ import numpy as np
 import cv2
 import os
 
+
 class Yolo:
     """Yolo class"""
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
