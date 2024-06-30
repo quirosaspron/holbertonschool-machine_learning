@@ -169,8 +169,8 @@ class Yolo:
         intersection_area = np.maximum((x2 - x1), 0) * np.maximum((y2 - y1), 0)
         box1_area = (box1[2] - box1[0]) * (box1[3] - box1[1])
         box2_area = (box2[:, 2] - box2[:, 0]) * (box2[:, 3] - box2[:, 1])
-        union_area = box1_area + box2_area - inter_area
-        iou = intresecton_area / union_area
+        union_area = box1_area + box2_area - intersection_area
+        iou = intresection_area / union_area
         return iou
 
     @staticmethod

@@ -190,3 +190,106 @@ class Yolo:
                     image_paths.append(img_path)
 
         return images, image_paths
+
+    def preprocess_images(self, images):
+        """
+        Resizes (modifies height and width)
+        and rescales (normalizing to range [0,1])
+        images for input to darket.
+        """
+        pimages = []
+        image_shapes = []
+
+        for image in images:
+            # Gets heigth, width and channel of the image
+            h, w, c = image.shape
+            image_shapes.append([h, w])
+
+            input_h = self.model.input.shape[1]
+            input_w = self.model.input.shape[2]
+            # Resize the image to the expected input of the model
+            resized_img = cv2.resize(image, dsize=(input_h, input_w),
+                                     interpolation=cv2.INTER_CUBIC)
+
+            # Rescales the pixel values to range [0,1]
+            # RGB pixel values have [0, 255.0] range
+            resized_img = resized_img / 255.0
+
+            pimages.append(resized_img)
+
+        # Converts list to ndarray
+        pimages = np.array(pimages)
+        image_shapes = np.array(image_shapes)
+
+        return pimages, image_shapes
+
+    def show_boxes(self, image, boxes, box_classes, box_scores, file_name):
+        """
+        Display the image with boundary boxes, class names, and box scores
+        """
+        for i, box in enumerate(boxes):
+            # Applies int to every element of box
+            x1, y1, x2, y2 = map(int, box)
+            class_name = self.class_names[box_classes[i]]
+            score = box_scores[i]
+
+            # Display boundary box
+            # Image, top and bottom corners, red and thickness of 2
+            cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)
+
+            # Display the class name and score
+            text = f'{class_name} {score:.2f}'
+            cv2.putText(image, text, (x1, y1 - 5),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                        (0, 0, 255), 1, cv2.LINE_AA)
+
+        cv2.imshow(file_name, image)
+        key = cv2.waitKey(0)
+
+        if key == ord('s'):
+            # Creates a detections directory if it doesn't exist
+            if not os.path.exists('detections'):
+                os.makedirs('detections')
+
+            save_path = os.path.join('detections', file_name)
+            cv2.imwrite(save_path, image)
+
+        cv2.destroyAllWindows()
+
+    def predict(self, folder_path):
+        """
+        Predicts and displays all images
+        on the specified folder path
+        """
+        predictions = []
+        images, image_paths = self.load_images(folder_path)
+        pimages, image_shapes = self.preprocess_images(images)
+        model_predictions = self.model.predict(pimages)
+
+        # Loops through every image
+        for idx in range(len(pimages)):
+            output = [p[idx] for p in model_predictions]
+            # Processes the output of darknet
+            (boxes, box_confidences,
+             box_class_probs) = self.process_outputs(output, image_shapes[idx])
+            # Filters the boxes
+            (filtered_boxes, box_classes,
+             box_scores) = self.filter_boxes(boxes,
+                                             box_confidences, box_class_probs)
+            # Applies non max supression
+            (box_predictions,predicted_box_classes,
+             predicted_box_scores) = self.non_max_suppression(filtered_boxes,
+                                                              box_classes,
+                                                              box_scores)
+            # Adds the predictions to the list
+            predictions.append((box_predictions,
+                               predicted_box_classes,
+                               predicted_box_scores))
+            # Displays the predicted image
+            self.show_boxes(image=images[idx],
+                    boxes=box_predictions,
+                    box_classes=predicted_box_classes,
+                    box_scores=predicted_box_scores,
+                    file_name=image_paths[idx])
+
+        return predictions, image_paths
