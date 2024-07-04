@@ -18,17 +18,13 @@ with shape (h, w, 3)")
 
         if style_image.shape[-1] != 3:
             raise TypeError("style_image must be a numpy.ndarray \
- 20 with shape (h, w, 3)")
+with shape (h, w, 3)")
 
         if not isinstance(content_image, np.ndarray):
             raise TypeError("content_image must be a numpy.ndarray \
 with shape (h, w, 3)")
 
         if content_image.shape[-1] != 3:
-            raise TypeError("content_image must be a numpy.ndarray \
-with shape (h, w, 3)")
-
-        if len(content_image.shape) != 3:
             raise TypeError("content_image must be a numpy.ndarray \
 with shape (h, w, 3)")
 
@@ -52,7 +48,7 @@ with shape (h, w, 3)")
 with shape (h, w, 3)")
         if len(image.shape) != 3:
             raise TypeError("image must be a numpy.ndarray \
-48 with shape (h, w, 3)")
+with shape (h, w, 3)")
         max_side = np.maximum(height, width)
         scaling_factor = 512/max_side
         new_height = int(height * scaling_factor)
