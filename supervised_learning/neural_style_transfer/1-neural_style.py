@@ -38,7 +38,7 @@ with shape (h, w, 3)")
         self.content_image = self.scale_image(content_image)
         self.alpha = alpha
         self.beta = beta
-        self.model = self.load_model()
+        self.load_model()
 
     @staticmethod
     def scale_image(image):
@@ -74,4 +74,4 @@ with shape (h, w, 3)")
         model_outputs = style_outputs + [content_output]
         model = tf.keras.models.Model(inputs=vgg.input,
                                       outputs=model_outputs)
-        return model
+        self.model = model
