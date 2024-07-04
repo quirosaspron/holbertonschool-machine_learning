@@ -43,7 +43,10 @@ with shape (h, w, 3)")
     def scale_image(image):
         """Rescales the image"""
         height, width = image.shape[:2]
-        if not isinstance(image, np.ndarray) or image.shape[-1] != 3:
+        if not isinstance(image, np.ndarray):
+            raise TypeError("image must be a numpy.ndarray \
+with shape (h, w, 3)")
+        if image.shape != (heigh, widht, 3):
             raise TypeError("image must be a numpy.ndarray \
 with shape (h, w, 3)")
         max_side = np.maximum(height, width)
