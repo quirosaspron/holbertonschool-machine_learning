@@ -64,8 +64,14 @@ with shape (h, w, 3)")
         vgg = tf.keras.applications.vgg19.VGG19(include_top=False,
                                                 weights='imagenet')
         vgg.trainable = False
+        # Replace max pooling with average pooling
+        for layer in vgg.layers:
+            if 'pool' in layer.name:
+                layer.pooling = 'avg'
+ 
         style_outputs = [vgg.get_layer(name).output for
                          name in self.style_layers]
-        content_output = [vgg.get_layer(self.content_layer).output]
-        model_outputs = style_outputs + content_output
-        return tf.keras.models.Model(vgg.input, model_outputs)
+        content_output = vgg.get_layer(self.content_layer).output
+        model_outputs = style_outputs + [content_output]
+        model = tf.keras.models.Model(inputs=vgg.input, outputs = model_outputs)
+        return model
