@@ -65,16 +65,24 @@ with shape (h, w, 3)")
         vgg = tf.keras.applications.vgg19.VGG19(include_top=False,
                                                 weights='imagenet')
         vgg.trainable = False
+
+        # We save the model and replace max pooling with average pooling
         vgg.save("VGG19_base_model")
         custom_objects = {'MaxPooling2D': tf.keras.layers.AveragePooling2D}
         vgg = tf.keras.models.load_model("VGG19_base_model",
                                          custom_objects=custom_objects)
+
+        # Gets the desired style layers from the model
         style_outputs = [vgg.get_layer(name).output for
                          name in self.style_layers]
+        # Gets the desired content layer from the model
         content_output = vgg.get_layer(self.content_layer).output
+        # Unites the layers for our architecture
         model_outputs = style_outputs + [content_output]
+        # Builds the model with our desired layers
         model = tf.keras.models.Model(inputs=vgg.input,
                                       outputs=model_outputs)
+
         self.model = model
 
     @staticmethod
@@ -95,10 +103,17 @@ with shape (h, w, 3)")
 
     def generate_features(self):
         """extracts the features used to calculate neural style cost"""
-        style_features = self.model(self.style_image)[:-1]
+        # Load the VGG19 model for preprocessing
+        VGG19 = tf.keras.applications.vgg1
+        # Preprocessing fucntion expect the values in range [0, 255]
+        style_image = VGG19.preprocess_input(self.style_image * 255)
+        # Our architecutre only uses the last layer for content
+        style_features = self.model(style_image)[:-1]
         style_matrix = [self.gram_matrix(tf.convert_to_tensor(feature))
                         for feature in style_features]
-        content_features = self.model(self.content_image)[-1]
+
+        content_image = VGG19.preprocess_input(self.content_image * 255)
+        content_features = self.model(content_image)[-1]
 
         self.gram_style_features = style_matrix
         self.content_feature = content_features
