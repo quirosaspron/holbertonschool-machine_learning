@@ -89,5 +89,5 @@ with shape (h, w, 3)")
         # Compute Gram matrix
         gram = tf.matmul(flattened_layer, flattened_layer, transpose_a=True)
         # Normalize by number of spatial locations
-        gram = gram / h*w
+        gram = gram / tf.cast(h*w, tf.float32)
         return gram
