@@ -128,9 +128,11 @@ with shape (h, w, 3)")
         # Number of channels
         c = gram_target.shape[-1]
         if not isinstance(gram_target, (tf.Tensor, tf.Variable)):
-            raise TypeError(f"gram_target must be a tensor of shape [1, {c}, {c}]")
+            raise TypeError(f"gram_target must be a \
+tensor of shape [1, {c}, {c}]")
         if gram_target.shape != (1, c, c):
-            raise TypeError(f"gram_target must be a tensor of shape [1, {c}, {c}]")
+            raise TypeError(f"gram_target must be a \
+tensor of shape [1, {c}, {c}]")
 
         gram_matrix = self.gram_matrix(style_output)
         style_cost = tf.reduce_mean(tf.square(gram_matrix - gram_target))
