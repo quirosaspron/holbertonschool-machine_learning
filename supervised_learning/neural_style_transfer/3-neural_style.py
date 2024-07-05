@@ -98,7 +98,7 @@ with shape (h, w, 3)")
         style_features = self.model(self.style_image)[:-1]
         style_matrix = [self.gram_matrix(tf.convert_to_tensor(feature))
                         for feature in style_features]
-        content_features = self.model(self.content_image)[:-1]
+        content_features = self.model(self.content_image)[-1]
 
         self.gram_style_features = style_matrix
         self.content_feature = content_features
