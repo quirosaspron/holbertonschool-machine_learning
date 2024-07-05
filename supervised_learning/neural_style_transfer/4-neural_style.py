@@ -130,7 +130,7 @@ with shape (h, w, 3)")
         if not isinstance(gram_target, (tf.Tensor, tf.Variable)):
             raise TypeError(f"gram_target must be a \
 tensor of shape [1, {c}, {c}]")
-        if gram_target.shape != (1, c, c):
+        if len(gram_target.shape) != 3 or gram_target.shape != (1, c, c):
             raise TypeError(f"gram_target must be a \
 tensor of shape [1, {c}, {c}]")
 
