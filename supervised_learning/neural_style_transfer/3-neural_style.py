@@ -104,7 +104,7 @@ with shape (h, w, 3)")
     def generate_features(self):
         """extracts the features used to calculate neural style cost"""
         # Load the VGG19 model for preprocessing
-        VGG19 = tf.keras.applications.vgg1
+        VGG19 = tf.keras.applications.vgg19
         # Preprocessing fucntion expect the values in range [0, 255]
         style_image = VGG19.preprocess_input(self.style_image * 255)
         # Our architecutre only uses the last layer for content
