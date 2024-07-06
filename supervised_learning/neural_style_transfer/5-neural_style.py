@@ -143,7 +143,7 @@ tensor of shape [1, {c}, {c}]")
         length = len(style_outputs)
         if length != len(self.style_layers):
             raise TypeError(f"style_outputs must be \
-a list with a length of {length}")
+a list with a length of {len(self.style_layers)}")
         # Sets the weight so that they sum to one
         weight = 1 / length
         style_cost = 0
