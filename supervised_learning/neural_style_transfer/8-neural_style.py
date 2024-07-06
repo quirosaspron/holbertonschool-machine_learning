@@ -198,7 +198,7 @@ of shape {content_shape}")
         content_cost = self.content_cost(generated_content)
         style_cost = self.style_cost(generated_style)
         total_cost = self.alpha * content_cost + self.beta * style_cost
-        return total_cost, content_cost, style_cost
+        return (total_cost, content_cost, style_cost)
 
     def compute_grads(self, generated_image):
         """Computes the gradients of the generated image"""
@@ -207,7 +207,6 @@ of shape {content_shape}")
            generated_image.shape != shape:
             raise TypeError(
                 "generated_image must be a tensor of shape {}".format(shape))
-
         with tf.GradientTape() as tape:
             total_cost, content_cost, \
                 style_cost = self.total_cost(generated_image)
