@@ -113,10 +113,10 @@ with shape (h, w, 3)")
                         for feature in style_features]
 
         content_image = VGG19.preprocess_input(self.content_image * 255)
-        content_features = self.model(content_image)[-1]
+        content_feature = self.model(content_image)[-1]
 
         self.gram_style_features = style_matrix
-        self.content_feature = content_features
+        self.content_feature = content_feature
 
     def layer_style_cost(self, style_output, gram_target):
         "Calculates the style cost for a single layer"""
@@ -125,25 +125,31 @@ with shape (h, w, 3)")
 
         if tf.rank(style_output) != 4:
             raise TypeError("style_output must be a tensor of rank 4")
+
         # Number of channels
         c = style_output.shape[-1]
+
         if not isinstance(gram_target, (tf.Tensor, tf.Variable)):
             raise TypeError(f"gram_target must be a \
 tensor of shape [1, {c}, {c}]")
+
         if gram_target.shape != (1, c, c):
             raise TypeError(f"gram_target must be a \
 tensor of shape [1, {c}, {c}]")
 
-        gram_matrix = self.gram_matrix(style_output)
-        style_cost = tf.reduce_mean(tf.square(gram_matrix - gram_target))
+        gram_output = self.gram_matrix(style_output)
+        style_cost = tf.reduce_mean(tf.square(gram_output - gram_target))
         return style_cost
 
     def style_cost(self, style_outputs):
         """Calculates the total style cost"""
         length = len(style_outputs)
-        if length != len(self.style_layers):
+        len_style = len(self.style_layers)
+
+        if not isinstance(style_outputs, list) or length != len_style:
             raise TypeError(f"style_outputs must be \
-a list with a length of {length}")
+a list with a length of {len_style}")
+
         # Sets the weight so that they sum to one
         weight = 1 / length
         style_cost = 0
@@ -152,3 +158,20 @@ a list with a length of {length}")
             style_cost += weight * self.layer_style_cost(
                 style_outputs[i], self.gram_style_features[i])
         return style_cost
+
+    def content_cost(self, content_output):
+        """Calculates the content cost"""
+        feature_shape = self.content_feature.shape
+
+        if not isinstance(content_output, (tf.Tensor, tf.Variable)):
+            raise TypeError(f"content_output must be a tensor \
+of shape {feature_shape}")
+
+        if content_output.shape != feature_shape:
+            raise TypeError(f"content_output must be a tensor \
+of shape {feature_shape}")
+
+        content_target = self.content_feature
+        content_cost = tf.reduce_mean(
+                       tf.square(content_output - content_target))
+        return content_cost
