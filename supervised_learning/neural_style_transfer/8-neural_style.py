@@ -207,7 +207,9 @@ of shape {content_shape}")
            generated_image.shape != shape:
             raise TypeError(
                 "generated_image must be a tensor of shape {}".format(shape))
+
         with tf.GradientTape() as tape:
+            tape.watch(generated_image)
             total_cost, content_cost, \
                 style_cost = self.total_cost(generated_image)
         grads = tape.gradient(total_cost, generated_image)
