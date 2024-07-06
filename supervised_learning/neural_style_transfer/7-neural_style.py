@@ -187,7 +187,6 @@ of shape {content_shape}")
         if generated_image.shape != content_shape:
             raise TypeError(f"generated_image must be a tensor \
 185 of shape {content_shape}")
-
         generated_features = self.model(generated_image)
         generated_style = generated_features[:-1]
         generated_content = generated_features[-1]
@@ -195,4 +194,4 @@ of shape {content_shape}")
         content_cost = self.content_cost(generated_content)
         style_cost = self.style_cost(generated_style)
         total_cost = self.alpha * content_cost + self.beta * style_cost
-        return (total_cost, content_cost, style_cost)
+        return total_cost, content_cost, style_cost
