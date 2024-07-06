@@ -141,7 +141,7 @@ tensor of shape [1, {c}, {c}]")
     def style_cost(self, style_outputs):
         """Calculates the total style cost"""
         length = len(style_outputs)
-        if lenght != len(self.style_layers):
+        if length != len(self.style_layers):
             raise TypeError(f"style_outputs must be \
 a list with a length of {l}")
         # Sets the weight so that they sum to one
