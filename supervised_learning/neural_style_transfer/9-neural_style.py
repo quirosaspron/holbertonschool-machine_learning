@@ -220,15 +220,15 @@ of shape {content_shape}")
         """Generates the neural style transferred image"""
         if type(iterations) is not int:
             raise TypeError("iterations must be an integer")
-        if iterations < 0:
+        if iterations <= 0:
             raise ValueError("iterations must be positive")
         if step is not None and type(step) is not int:
             raise TypeError("step must be an integer")
-        if step is not None and (step < 0 or step > iterations):
+        if step is not None and (step <= 0 or step > iterations):
             raise ValueError("step must be positive and less than iterations")
         if type(lr) is not int and type(lr) is not float:
             raise TypeError("lr must be a number")
-        if lr < 0:
+        if lr <= 0:
             raise ValueError("lr must be positive")
         if type(beta1) is not float:
             raise TypeError("beta1 must be a float")
@@ -238,9 +238,9 @@ of shape {content_shape}")
             raise TypeError("beta2 must be a float")
         if beta2 < 0 or beta2 > 1:
             raise ValueError("beta2 must be in the range [0, 1]")
+
+        # generated_image = tf.Variable(self.content_image, dtype=tf.float32)
         generated_image = self.content_image
-        # Initialize the generated image as a copy of the content image
-        generated_image = tf.Variable(self.content_image, dtype=tf.float32)
         optimizer = tf.optimizers.Adam(learning_rate=lr,
                                        beta_1=beta1, beta_2=beta2)
 
