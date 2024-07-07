@@ -215,7 +215,8 @@ of shape {content_shape}")
         grads = tape.gradient(total_cost, generated_image)
         return grads, total_cost, content_cost, style_cost
 
-    def generate_image(self, iterations=1000, step=None, lr=0.01, beta1=0.9, beta2=0.99):
+    def generate_image(self, iterations=1000,
+                       step=None, lr=0.01, beta1=0.9, beta2=0.99):
         """Generates the neural style transferred image"""
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
@@ -225,7 +226,8 @@ of shape {content_shape}")
             if not isinstance(step, int):
                 raise TypeError("step must be an integer")
             if step <= 0 or step >= iterations:
-                raise ValueError("step must be positive and less than iterations")
+                raise ValueError("step must be positive \
+and less than iterations")
         if not isinstance(lr, (float, int)):
             raise TypeError("lr must be a number")
         if lr <= 0:
@@ -241,7 +243,8 @@ of shape {content_shape}")
 
         # Initialize the generated image as a copy of the content image
         generated_image = tf.Variable(self.content_image, dtype=tf.float32)
-        optimizer = tf.optimizers.Adam(learning_rate=lr, beta_1=beta1, beta_2=beta2)
+        optimizer = tf.optimizers.Adam(learning_rate=lr,
+                                       beta_1=beta1, beta_2=beta2)
 
         best_cost = float('inf')
         best_image = None
@@ -256,7 +259,9 @@ of shape {content_shape}")
                 best_image = tf.squeeze(generated_image).numpy()
 
             if step is not None and i % step == 0:
-                print(f"Cost at iteration {i}: {J.numpy()}, content {J_content.numpy()}, style {J_style.numpy()}")
+                print(f"Cost at iteration {i}: {J.numpy()}, \
+content {J_content.numpy()}, style {J_style.numpy()}")
 
-        print(f"Cost at iteration {iterations}: {best_cost}, content {J_content.numpy()}, style {J_style.numpy()}")
+        print(f"Cost at iteration {iterations}: {best_cost}, \
+content {J_content.numpy()}, style {J_style.numpy()}")
         return best_image, best_cost
