@@ -239,8 +239,7 @@ of shape {content_shape}")
         if beta2 < 0 or beta2 > 1:
             raise ValueError("beta2 must be in the range [0, 1]")
 
-        # generated_image = tf.Variable(self.content_image, dtype=tf.float32)
-        generated_image = self.content_image
+        generated_image = tf.Variable(self.content_image, dtype=tf.float32)
         optimizer = tf.optimizers.Adam(learning_rate=lr,
                                        beta_1=beta1, beta_2=beta2)
 
@@ -262,4 +261,4 @@ content {J_content.numpy()}, style {J_style.numpy()}")
 
         print(f"Cost at iteration {iterations}: {best_cost}, \
 content {J_content.numpy()}, style {J_style.numpy()}")
-        return best_image, best_cost
+        return best_image, best_cost.numpy()
