@@ -245,15 +245,13 @@ of shape {content_shape}")
 
         best_cost = float('inf')
         best_image = None
-
         for i in range(iterations):
             grads, J, J_content, J_style = self.compute_grads(generated_image)
-            optimizer.apply_gradients([(grads, generated_image)])
-            generated_image.assign(tf.clip_by_value(generated_image, 0.0, 1.0))
-
             if J < best_cost:
                 best_cost = J
                 best_image = tf.squeeze(generated_image).numpy()
+            optimizer.apply_gradients([(grads, generated_image)])
+            generated_image.assign(tf.clip_by_value(generated_image, 0.0, 1.0))
 
             if step is not None and i % step == 0:
                 print(f"Cost at iteration {i}: {J.numpy()}, \
