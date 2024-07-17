@@ -11,7 +11,7 @@ def definiteness(matrix):
 
     size = matrix.shape[0]
 
-    if matrix.shape != (size, size):
+    if matrix.shape != (size, size) or matrix.size == 0:
         return None
 
     dets_list = []
