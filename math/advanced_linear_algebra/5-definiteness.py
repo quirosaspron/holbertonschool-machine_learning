@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Calculates the definiteness of a matrix"""
-import numpy
+import numpy as np
 
 
 def definiteness(matrix):
     """Returns the definiteness of a matrix"""
 
-    if not isinstance(matrix, numpy.ndarray):
+    if not isinstance(matrix, np.ndarray):
         raise TypeError('matrix must be a numpy.ndarray')
 
     size = matrix.shape[0]
@@ -16,7 +16,7 @@ def definiteness(matrix):
 
     dets_list = []
     for i in range(size):
-        det = numpy.linalg.det(matrix[:i+1, :i+1])
+        det = np.linalg.det(matrix[:i+1, :i+1])
         dets_list.append(det)
 
     definiteness = 'Positive definite'
