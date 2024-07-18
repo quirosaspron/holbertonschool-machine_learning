@@ -45,3 +45,14 @@ class Poisson:
         fact = self.factorial(k)
         pmf = ((lambtha**k)*(exp**-lambtha))/fact
         return pmf
+
+    def cdf(self, k):
+        "Calculates the cumulative distribution function"
+        k = int(k)
+        if k < 0:
+            return 0
+        cdf = 0
+        while k >= 0:
+            cdf += self.pmf(k)
+            k += -1
+        return cdf
