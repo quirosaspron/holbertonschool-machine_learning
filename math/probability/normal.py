@@ -10,7 +10,7 @@ class Normal:
     def __init__(self, data=None, mean=0., stddev=1.):
         "Sets the lambtha attribute"
         if data is None:
-            if not stddev >= 0:
+            if not stddev > 0:
                 raise ValueError('stddev must be a positive value')
             else:
                 self.mean = float(mean)
