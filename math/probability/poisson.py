@@ -4,6 +4,8 @@
 
 class Poisson:
     """Poisson class"""
+    e = 2.7182818285
+
     def __init__(self, data=None, lambtha=1):
         "Sets the lambtha attribute"
         if data is None:
@@ -25,3 +27,21 @@ class Poisson:
         for i in data:
             sumation += i
         return sumation / len(data)
+
+    def factorial(self, number):
+        "Calculates the factorial of a number"
+        if number == 1 or number == 0:
+            return 1
+        else:
+            return self.factorial(number - 1) * number
+
+    def pmf(self, k):
+        "Calculates the probability mass function"
+        k = int(k)
+        if k < 0:
+            return 0
+        lambtha = self.lambtha
+        exp = Poisson.e
+        fact = self.factorial(k)
+        pmf = ((lambtha**k)*(exp**-lambtha))/fact
+        return pmf
