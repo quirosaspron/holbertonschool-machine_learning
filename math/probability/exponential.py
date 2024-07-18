@@ -43,5 +43,5 @@ class Exponential:
             return 0
         e = Exponential.e
         lambtha = self.lambtha
-        cdf = 1 - e**-lambtha*x
+        cdf = 1 - (e**-lambtha*x)
         return cdf
