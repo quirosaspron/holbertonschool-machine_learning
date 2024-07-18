@@ -30,11 +30,11 @@ class Exponential:
 
     def pdf(self, x):
         "Calculates the probability density function"
-        if x < 0:
+        if x <= 0:
             return 0
         lambtha = self.lambtha
         exp = Exponential.e
-        pdf = lambtha * (exp **(-lambtha * x))
+        pdf = lambtha * (exp**(-lambtha * x))
         return pdf
 
     def cdf(self, x):
