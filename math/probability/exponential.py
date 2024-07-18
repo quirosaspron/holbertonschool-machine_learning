@@ -30,7 +30,6 @@ class Exponential:
 
     def pdf(self, k):
         "Calculates the probability density function"
-        k = int(k)
         if k < 0:
             return 0
         lambtha = self.lambtha
