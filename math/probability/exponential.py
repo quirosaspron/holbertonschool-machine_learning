@@ -28,20 +28,20 @@ class Exponential:
             sumation += i
         return sumation / len(data)
 
-    def pdf(self, k):
+    def pdf(self, x):
         "Calculates the probability density function"
-        if k < 0:
+        if x < 0:
             return 0
         lambtha = self.lambtha
         exp = Exponential.e
-        pdf = lambtha * (exp**(-lambtha*k))
+        pdf = lambtha * (exp**(-lambtha*x))
         return pdf
 
-    def cdf(self, k):
+    def cdf(self, x):
         "Calculates the cumulative distribution function"
-        if k < 0:
+        if x < 0:
             return 0
         e = Exponential.e
         lambtha = self.lambtha
-        cdf = 1 - e**-lambtha*k
+        cdf = 1 - e**-lambtha*x
         return cdf
