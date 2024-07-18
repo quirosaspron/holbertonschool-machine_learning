@@ -34,7 +34,7 @@ class Exponential:
             return 0
         lambtha = self.lambtha
         exp = Exponential.e
-        pdf = lambtha * (exp **(-lambtha * x))
+        pdf = lambtha * (exp**(-lambtha*x))
         return pdf
 
     def cdf(self, x):
