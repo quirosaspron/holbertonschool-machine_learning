@@ -12,7 +12,7 @@ NST = __import__('9-neural_style').NST
 
 
 if __name__ == '__main__':
-    style_image = mpimg.imread("pollock.jpg")
+    style_image = mpimg.imread("starry_night.jpg")
     content_image = mpimg.imread("dogs.jpg")
 
     # Reproducibility
