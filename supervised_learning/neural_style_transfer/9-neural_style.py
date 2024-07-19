@@ -263,6 +263,6 @@ content {J_content.numpy()}, style {J_style.numpy()}")
             best_cost = J
             best_image = generated_image.numpy()[0]
         if step is not None and i % step == 0:
-             print(f"Cost at iteration {iterations}: {J.numpy()}, \
+            print(f"Cost at iteration {iterations}: {J.numpy()}, \
 content {J_content.numpy()}, style {J_style.numpy()}")
         return best_image, best_cost.numpy()
