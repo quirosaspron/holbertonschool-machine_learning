@@ -8,7 +8,7 @@ import numpy as np
 import tensorflow as tf
 
 
-NST = __import__('9-neural_style').NST
+NST = __import__('10-neural_style').NST
 
 
 if __name__ == '__main__':
