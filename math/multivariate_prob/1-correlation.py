@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"Mean and covariance calculation"
+"Correlation calculation"
 import numpy as np
 
 
