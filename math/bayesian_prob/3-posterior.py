@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-""" Marginal calculation """
+""" Posterior calculation """
 import numpy as np
 
 
-def marginal(x, n, P, Pr):
-    """"Calculates the marginal probability of obtaining the
-     data:
+def posterior(x, n, P, Pr):
+    """"Calculates posterior probability for the various
+     hypothetical probabilities of developing severe
+     side effects given the data:
      x:number of patients that develop severe side effects
      n: total number of patients observed
      P: numpy.ndarray containing the probabilities of
@@ -44,4 +45,6 @@ same shape as P')
     intersection = likelihood * Pr
     # Calculate marginal
     marginal = np.sum(intersection)
-    return marginal
+    # Calculate posterior
+    posterior = intersection / marginal
+    return posterior
