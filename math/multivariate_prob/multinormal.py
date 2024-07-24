@@ -4,6 +4,8 @@ import numpy as np
 
 
 class MultiNormal:
+    """Multivariate Normal distribution representation"""
+
     def __init__(self, data):
         """Initializes the class"""
 
@@ -13,6 +15,7 @@ class MultiNormal:
         if data.shape[1] < 2:
             raise ValueError('data must contain \
 multiple data points')
+
         mean = np.mean(data, axis=1, keepdims=True)
         self.mean = mean
         cov = np.matmul(data-mean, data.T-mean.T)/(data.shape[1]-1)
