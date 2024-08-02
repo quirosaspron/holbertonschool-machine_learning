@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import numpy as np
 """intra-cluster variance"""
+import numpy as np
 
 
 def variance(X, C):
