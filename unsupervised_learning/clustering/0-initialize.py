@@ -4,9 +4,11 @@ import numpy as np
 
 
 def initialize(X, k):
-    """initializes cluster centroids for K-meansi
-       X: numpy.ndarray containing the dataset
-       k: number of clusters"""
+    """
+    Initializes cluster centroids for K-meansi
+    X: numpy.ndarray containing the dataset
+    k: number of clusters
+    """
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None
     if not isinstance(k, int) or k <= 0:
