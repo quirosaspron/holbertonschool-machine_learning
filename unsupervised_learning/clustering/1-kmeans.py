@@ -38,7 +38,7 @@ def kmeans(X, k, iterations=1000):
         # Check for convergence (if centroids do not change)
         if np.all(C == new_C):
             break
-        
+ 
         C = new_C
-    
+
     return C, clss
