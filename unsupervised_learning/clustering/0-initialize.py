@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
-"K-means clustering"
+"""K-means clustering"""
 
 
 def initialize(X, k):
