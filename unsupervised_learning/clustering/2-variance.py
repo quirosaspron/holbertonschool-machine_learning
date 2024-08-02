@@ -15,10 +15,9 @@ def variance(X, C):
     if not isinstance(C, np.ndarray) or len(C.shape) != 2:
         return None
 
-    # Adds a dimension to X and broadcasts X and C
-    distance = np.linalg.norm(X[:, np.newaxis] - C, axis=2)
-    # Distance shape (n, k) closest_centroids shape (n,)
-    closest_centroids = np.argmin(distances, axis=1)
-    variances = np.sum((X - C[closest_centroids]) ** 2, axis=1)
-    total_variance = np.mean(variances)
-    return total_variance
+    centroids_extended = C[:, np.newaxis]
+    distances = np.linalg.norm(X - centroids_extended, axis=2)
+    min_distances = np.min(distances, axis=0)
+    variance = np.sum(min_distances ** 2)
+
+    return variance
