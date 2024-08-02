@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""GMM"""
+"""Gaussian Mixture Model"""
 import numpy as np
 kmeans = __import__('1-kmeans').kmeans  # Import the kmeans function
 
