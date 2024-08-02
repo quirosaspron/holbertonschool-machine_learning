@@ -25,7 +25,7 @@ def initialize(X, k):
     if not isinstance(k, int) or k <= 0:
         return None, None, None
 
-    n, d = X.shape 
+    n, d = X.shape
     # Initialize centroids using K-means
     C, _ = kmeans(X, k)
     # Initialize priors with equal values
