@@ -9,7 +9,7 @@ def initialize(X, k):
        k: number of clusters"""
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None
-    if type(k) != int or k <= 0:
+    if not isinstance(k,int) or k <= 0:
         return None
 
     n, d = X.shape
