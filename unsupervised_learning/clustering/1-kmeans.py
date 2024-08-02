@@ -4,10 +4,13 @@ import numpy as np
 
 
 def kmeans(X, k, iterations=1000):
-    """performs K-means on a dataset
-       X: numpy.ndarray containing the dataset
-       k: number of clusters
-       iterations: maximum number of iterations"""
+    """
+    Performs K-means on a dataset
+    X: numpy.ndarray containing the dataset
+    k: number of clusters
+    iterations: maximum number of iterations
+    """
+
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None
     if type(k) != int or k <= 0:

@@ -4,9 +4,11 @@ import numpy as np
 
 
 def variance(X, C):
-    """Calculates the intra-cluster variance
-       X: np.ndarray containing the dataset
-       C: np.ndarray with centroid means for each cluster"""
+    """
+    Calculates the intra-cluster variance
+    X: np.ndarray containing the dataset
+    C: np.ndarray with centroid means for each cluster
+    """
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None
 
