@@ -15,6 +15,9 @@ def variance(X, C):
     if not isinstance(C, np.ndarray) or len(C.shape) != 2:
         return None
 
+    if X.shape[1] != C.shape[1]:
+        return None
+
     centroids_extended = C[:, np.newaxis]
     distances = np.linalg.norm(X - centroids_extended, axis=2)
     min_distances = np.min(distances, axis=0)
