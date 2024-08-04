@@ -6,49 +6,33 @@ pdf = __import__('5-pdf').pdf
 
 def expectation(X, pi, m, S):
     """
-    Performs the expectation step of the EM algorithm for a GMM.
-    X: np.ndarray of shape (n, d) containing the data set
-    pi: np.ndarray of shape (k,) containing the priors for each cluster
-    m: np.ndarray of shape (k, d) containing the centroid
-    means for each cluster
-    S: np.ndarray of shape (k, d, d) containing the covariance
-    matrices for each cluster
-    Returns:
-    g: np.ndarray of shape (k, n) containing the posterior
-    probabilities for each data point in each cluster
-    l: float, the total log likelihood
+    Calculates the expectation step in the EM algorithm for a GMM.
     """
-
-    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
+    if (not isinstance(X, np.ndarray) or X.ndim != 2 or
+            not isinstance(pi, np.ndarray) or pi.ndim != 1 or
+            not isinstance(m, np.ndarray) or m.ndim != 2 or
+            not isinstance(S, np.ndarray) or S.ndim != 3 or
+            X.shape[1] != m.shape[1] or m.shape[0] != S.shape[0] or
+            S.shape[1] != S.shape[2] or
+            pi.shape[0] != m.shape[0] or pi.shape[0] != S.shape[0]):
         return None, None
 
-    if not isinstance(pi, np.ndarray) or len(pi.shape) != 1:
+    if not np.isclose([np.sum(pi)], [1])[0]:
         return None, None
 
-    if not isinstance(m, np.ndarray) or len(m.shape) != 2:
-        return None, None
-
-    if not isinstance(S, np.ndarray) or len(S.shape) != 3:
-        return None, None
-
-    n, d = X.shape
     k = pi.shape[0]
 
-    # Initialize the posterior probabilities array
-    g = np.zeros((k, n))
+    # Build array of PDF values w/ each cluster
+    pdfs = np.array([pdf(X, m[i], S[i]) for i in range(k)])
 
-    # Calculate the PDF for each cluster and each data point
-    for j in range(k):
-        pdf_values = pdf(X, m[j], S[j])
-        g[j, :] = pi[j] * pdf_values
+    # Calculate the weighted PDFs
+    weighted_pdfs = pi[:, np.newaxis] * pdfs
 
-    # Normalize the posterior probabilities
-    g_sum = np.sum(g, axis=0)
-    if np.any(g_sum == 0):  # To avoid division by zero
-        return None, None
-    g = g / g_sum
+    # Normalize posterior probabilities by marginal probabilities
+    marginal_prob = np.sum(weighted_pdfs, axis=0)
+    post_probs = weighted_pdfs / marginal_prob
 
-    # Calculate the total log likelihood
-    likelihood = np.sum(np.log(g_sum))
+    # Calc. the log likelihood(sum of logs of all marginal probs)
+    log_likelihood = np.sum(np.log(marginal_prob))
 
-    return g, likelihood
+    return post_probs, log_likelihood
