@@ -5,43 +5,42 @@ import numpy as np
 
 def kmeans(X, k, iterations=1000):
     """
-    Performs K-means on a dataset
-    X: numpy.ndarray containing the dataset
-    k: number of clusters
-    iterations: maximum number of iterations
+    Calculate the centroid by K mean algorithm
+    return  the K centroids and the clss
     """
 
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None
     if not isinstance(k, int) or k <= 0:
         return None
-    if not isinstance(iterations, int) or iterations <= 0:
-        return None, None
 
     n, d = X.shape
-    low = np.min(X, axis=0)
-    high = np.max(X, axis=0)
-    C = np.random.uniform(low, high, size=(k, d))
 
-    for _ in range(iterations):
-        # Assignment Step: Assign each point to the nearest centroid
-        distances = np.linalg.norm(X[:, np.newaxis] - C, axis=2)
+    # initialize random k-centroids
+    centroid = np.random.uniform(low=np.min(X, axis=0),
+                                 high=np.max(X, axis=0), size=(k, d))
+
+    for i in range(iterations):
+        # get the closer centroid for each X
+        distances = np.linalg.norm(X[:, np.newaxis] - centroid, axis=2)
         clss = np.argmin(distances, axis=1)
-        new_C = np.zeros((k, d))
 
-        # Update Step: Calculate the new centroids
+        new_centroid = np.copy(centroid)
+
         for j in range(k):
-            # Boolean Indexing
-            points_in_cluster = X[clss == j]
-            if len(points_in_cluster) == 0:
-                new_C[j] = np.random.uniform(low, high, d)
+            # new centroid
+            if len(np.where(clss == j)[0]) == 0:
+                centroid[j] = np.random.uniform(np.min(X, axis=0),
+                                                np.max(X, axis=0), d)
+            
             else:
-                new_C[j] = points_in_cluster.mean(axis=0)
+                centroid[j] = np.mean(X[np.where(clss == j)], axis=0)
+        # if centroid don't change, break
+        if np.array_equal(new_centroid, centroid):
 
-        # Check for convergence (if centroids do not change)
-        if np.all(C == new_C):
             break
- 
-        C = new_C
 
-    return C, clss
+    distances = np.linalg.norm(X[:, np.newaxis] - centroid, axis=2)
+    clss = np.argmin(distances, axis=1)
+
+    return centroid, clss
