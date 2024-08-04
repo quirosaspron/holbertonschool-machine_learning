@@ -3,44 +3,64 @@
 import numpy as np
 
 
-def kmeans(X, k, iterations=1000):
+def initialize(X, k):
     """
-    Calculate the centroid by K mean algorithm
-    return  the K centroids and the clss
+    Initialize cluster centroids for K-means clustering
     """
-
-    if not isinstance(X, np.ndarray) or len(X.shape) != 2:
+    if not isinstance(X, np.ndarray) or not isinstance(k, int) or k <= 0:
         return None
-    if not isinstance(k, int) or k <= 0:
+
+    if len(X.shape) != 2:
         return None
 
     n, d = X.shape
+    if n < k:
+        return None
 
-    # initialize random k-centroids
-    centroid = np.random.uniform(low=np.min(X, axis=0),
-                                 high=np.max(X, axis=0), size=(k, d))
+    min_vals = np.min(X, axis=0)
+    max_vals = np.max(X, axis=0)
 
-    for i in range(iterations):
-        # get the closer centroid for each X
-        distances = np.linalg.norm(X[:, np.newaxis] - centroid, axis=2)
-        clss = np.argmin(distances, axis=1)
+    centroids = np.random.uniform(min_vals, max_vals, (k, d))
 
-        new_centroid = np.copy(centroid)
+    return centroids
 
-        for j in range(k):
-            # new centroid
-            if len(np.where(clss == j)[0]) == 0:
-                centroid[j] = np.random.uniform(np.min(X, axis=0),
-                                                np.max(X, axis=0), d)
-            
+
+def kmeans(X, k, iterations=1000):
+    """
+    Performs K-means on a dataset.
+    """
+    if not isinstance(X, np.ndarray) or X.ndim != 2:
+        return None, None
+    if not isinstance(k, int) or k <= 0:
+        return None, None
+    if not isinstance(iterations, int) or iterations <= 0:
+        return None, None
+
+    ctds = initialize(X, k)
+    if ctds is None:
+        return None, None
+
+    for _ in range(iterations):
+        prev_ctds = np.copy(ctds)
+
+        # Calculate distances and assign clusters
+        dists = np.sqrt(np.sum((X - ctds[:, np.newaxis]) ** 2, axis=2))
+        clss = np.argmin(dists, axis=0)
+
+        for i in range(k):
+            # Mask: points present in cluster
+            cluster_mask = X[clss == i]
+            if len(cluster_mask) == 0:
+                ctds[i] = initialize(X, 1)
             else:
-                centroid[j] = np.mean(X[np.where(clss == j)], axis=0)
-        # if centroid don't change, break
-        if np.array_equal(new_centroid, centroid):
+                ctds[i] = np.mean(cluster_mask, axis=0)
 
+        # Recalculate distances and reassign clusters
+        dists = np.sqrt(np.sum((X - ctds[:, np.newaxis]) ** 2, axis=2))
+        clss = np.argmin(dists, axis=0)
+
+        # Convergence check (if points haven't changed clusters)
+        if np.allclose(ctds, prev_ctds):
             break
 
-    distances = np.linalg.norm(X[:, np.newaxis] - centroid, axis=2)
-    clss = np.argmin(distances, axis=1)
-
-    return centroid, clss
+    return ctds, clss
