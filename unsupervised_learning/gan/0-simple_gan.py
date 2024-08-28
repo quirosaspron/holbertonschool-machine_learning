@@ -24,8 +24,8 @@ class Simple_GAN(keras.Model):
         self.beta_1 = .5
         self.beta_2 = .9
 
-        self.generator.loss = lambda x:
-            tf.keras.losses.MeanSquaredError()(x, tf.ones(x.shape))
+        self.generator.loss = lambda x: (
+            tf.keras.losses.MeanSquaredError()(x, tf.ones(x.shape)))
         self.generator.optimizer = keras.optimizers.Adam(
             learning_rate=self.learning_rate,
             beta_1=self.beta_1,
@@ -62,19 +62,27 @@ class Simple_GAN(keras.Model):
         """Trains the discriminator and generator"""
         for _ in range(self.disc_iter):
             with tf.GradientTape() as tape:
+                # Get real and fake samples
                 real_sample = self.discriminator(self.get_real_sample())
                 fake_sample = self.discriminator(self.get_fake_sample())
+                # Compute loss
                 discr_loss = self.discriminator.loss(real_sample, fake_sample)
+            # Compute gradients
             gradients = tape.gradient(discr_loss,
                                       self.discriminator.trainable_variables)
+            # Apply gradients
             self.discriminator.optimizer.apply_gradients(
                  zip(gradients, self.discriminator.trainable_variables))
 
             with tf.GradientTape() as tape:
+                # Get fake sample
                 fake_sample = self.discriminator(self.get_fake_sample())
+                # Compute loss
                 gen_loss = self.generator.loss(fake_sample)
+            # Compute gradients
             gradients = tape.gradient(gen_loss,
                                       self.generator.trainable_variables)
+            # Apply gradients
             self.generator.optimizer.apply_gradients(
                 zip(gradients, self.generator.trainable_variables))
 
