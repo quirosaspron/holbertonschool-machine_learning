@@ -76,7 +76,9 @@ class Simple_GAN(keras.Model):
 
             with tf.GradientTape() as tape:
                 # Get fake sample
-                fake_sample = self.discriminator(self.get_fake_sample())
+                size = self.batch_size
+                generated = self.generator(self.latent_generator(size))
+                fake_sample = self.discriminator(generated)
                 # Compute loss
                 gen_loss = self.generator.loss(fake_sample)
             # Compute gradients
