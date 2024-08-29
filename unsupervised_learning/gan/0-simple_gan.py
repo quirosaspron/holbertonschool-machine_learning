@@ -74,13 +74,13 @@ class Simple_GAN(keras.Model):
             self.discriminator.optimizer.apply_gradients(
                  zip(gradients, self.discriminator.trainable_variables))
 
-            with tf.GradientTape() as tape:
-                # Get fake sample
-                size = self.batch_size
-                generated = self.generator(self.latent_generator(size))
-                fake_sample = self.discriminator(generated)
-                # Compute loss
-                gen_loss = self.generator.loss(fake_sample)
+        with tf.GradientTape() as tape:
+            # Get fake sample
+            size = self.batch_size
+            generated = self.generator(self.latent_generator(size))
+            fake_sample = self.discriminator(generated)
+            # Compute loss
+            gen_loss = self.generator.loss(fake_sample)
             # Compute gradients
             gradients = tape.gradient(gen_loss,
                                       self.generator.trainable_variables)
