@@ -89,14 +89,16 @@ class WGAN_GP(keras.Model):
         """Trains the discriminator and generator"""
         for _ in range(self.disc_iter):
             with tf.GradientTape() as tape:
-                real_sample = self.discriminator(self.get_real_sample())
-                fake_sample = self.discriminator(self.get_fake_sample())
-
+                tape.watch(self.discriminator.trainable_variables)
+                real_sample = self.get_real_sample()
+                fake_sample = self.get_fake_sample(training=True)
                 # Get interpolated sample
                 interpolated_sample = self.get_interpolated_sample(real_sample,
                                                                    fake_sample)
                 # Compute the old loss
-                discr_loss = self.discriminator.loss(real_sample, fake_sample)
+                real_pred = self.discriminator(real_sample, training=True)
+                fake_pred = self.discriminator(fake_sample, training=True)
+                discr_loss = self.discriminator.loss(real_pred, fake_pred)
                 # Compute the gradient penalty gp
                 gp = self.gradient_penalty(interpolated_sample)
                 # Compute the new loss
@@ -108,13 +110,14 @@ class WGAN_GP(keras.Model):
                  zip(gradients, self.discriminator.trainable_variables))
 
         with tf.GradientTape() as tape:
+            tape.watch(self.generator.trainable_variables)
             size = self.batch_size
             generated = self.generator(self.latent_generator(size))
-            fake_sample = self.discriminator(generated)
+            fake_sample = self.discriminator(generated, training=True)
             gen_loss = self.generator.loss(fake_sample)
-            gradients = tape.gradient(gen_loss,
-                                      self.generator.trainable_variables)
-            self.generator.optimizer.apply_gradients(
-                zip(gradients, self.generator.trainable_variables))
+        gradients = tape.gradient(gen_loss,
+                                  self.generator.trainable_variables)
+        self.generator.optimizer.apply_gradients(
+            zip(gradients, self.generator.trainable_variables))
 
-        return {"discr_loss": discr_loss, "gen_loss": gen_loss}
+        return {"discr_loss": discr_loss, "gen_loss": gen_loss, "gp":gp}
