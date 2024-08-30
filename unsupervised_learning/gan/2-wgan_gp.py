@@ -22,7 +22,7 @@ class WGAN_GP(keras.Model):
         self.disc_iter = disc_iter
 
         self.learning_rate = learning_rate
-        self.beta_1 = .5
+        self.beta_1 = .3
         self.beta_2 = .9
 
         self.lambda_gp = lambda_gp
@@ -120,4 +120,4 @@ class WGAN_GP(keras.Model):
         self.generator.optimizer.apply_gradients(
             zip(gradients, self.generator.trainable_variables))
 
-        return {"discr_loss": discr_loss, "gen_loss": gen_loss, "gp":gp}
+        return {"discr_loss": discr_loss, "gen_loss": gen_loss, "gp": gp}
