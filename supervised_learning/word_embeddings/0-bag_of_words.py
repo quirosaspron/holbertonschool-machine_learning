@@ -36,8 +36,8 @@ def bag_of_words(sentences, vocab=None):
             for word in sentence.split():
                 if word not in features:
                     features.append(word)
+        features = sorted(features)
 
-    features = sorted(features)
     len_f = len(features)
     embeddings = np.zeros((len_s, len_f), int)
 
