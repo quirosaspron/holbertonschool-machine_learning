@@ -26,8 +26,8 @@ def bag_of_words(sentences, vocab=None):
 
     # Get features
     if vocab is not None:
-        for sentence in sentences:
-            for word in vocab:
+        for word in vocab:
+            for sentence in sentences:
                 if word in sentence.split() and word not in features:
                     features.append(word)
 
