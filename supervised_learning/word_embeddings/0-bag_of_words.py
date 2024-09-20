@@ -45,4 +45,4 @@ def bag_of_words(sentences, vocab=None):
         for j, word in enumerate(features):
             embeddings[i][j] += sentence.split().count(word)
 
-    return embeddings, features
+    return embeddings, np.array(features)
