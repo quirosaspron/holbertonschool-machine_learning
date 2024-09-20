@@ -3,6 +3,24 @@
 import numpy as np
 
 
+def clean_sentence(sentence):
+    """ Makes the sentence lowercase and removes non alphabet
+        characters"""
+    sentence = sentence.lower()
+    alphabet = set("abcdefghijklmnopqrstuvwxyz")
+    cleaned = []
+
+    for char in sentence:
+        if char in alphabet or char.isspace():
+            cleaned.append(char)
+
+    cleaned_sentence = ''
+    for char in cleaned:
+        cleaned_sentence += char
+
+    return cleaned_sentence
+
+
 def bag_of_words(sentences, vocab=None):
     """
         sentences: list of sentences
@@ -12,7 +30,7 @@ def bag_of_words(sentences, vocab=None):
         features: unique vocab words in sentences
 
     """
-    sentences = sentences
+    sentences = [clean_sentence(sentence) for sentence in sentences]
     len_s = len(sentences)
     features = []
 
@@ -20,12 +38,12 @@ def bag_of_words(sentences, vocab=None):
     if vocab is not None:
         for sentence in sentences:
             for word in vocab:
-                if word in sentence.lower().split():
+                if word in sentence.split():
                     features.append(word)
 
     else:
         for sentence in sentences:
-            for word in sentence.lower().split():
+            for word in sentence.split():
                 if word not in features:
                     features.append(word)
 
@@ -36,6 +54,6 @@ def bag_of_words(sentences, vocab=None):
     # Get frequency of each feature in each sentence
     for i, sentence in enumerate(sentences):
         for j, word in enumerate(features):
-            embeddings[i][j] += sentence.lower().split().count(word)
+            embeddings[i][j] += sentence.split().count(word)
 
     return embeddings, features
