@@ -18,7 +18,8 @@ def bag_of_words(sentences, vocab=None):
     features = []
 
     # Replace possessive forms with their non-possessive versions
-    sentences = [re.sub(r"(\b\w+)'s\b", r'\1', sentence) for sentence in sentences]
+    sentences = [re.sub(r"(\b\w+)'s\b", r'\1', sentence)
+                 for sentence in sentences]
 
     # Remove non-word characters
     sentences = [re.sub(r"[^\w\s]", ' ', sentence) for sentence in sentences]
