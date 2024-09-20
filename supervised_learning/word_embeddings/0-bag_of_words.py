@@ -1,24 +1,7 @@
 #!/usr/bin/env python3
 """Creates a bag of words embedding matrix"""
 import numpy as np
-
-
-def clean_sentence(sentence):
-    """ Makes the sentence lowercase and removes non alphabet
-        characters"""
-    sentence = sentence.lower()
-    alphabet = set("abcdefghijklmnopqrstuvwxyz")
-    cleaned = []
-
-    for char in sentence:
-        if char in alphabet or char.isspace():
-            cleaned.append(char)
-
-    cleaned_sentence = ''
-    for char in cleaned:
-        cleaned_sentence += char
-
-    return cleaned_sentence
+import re
 
 
 def bag_of_words(sentences, vocab=None):
@@ -30,9 +13,12 @@ def bag_of_words(sentences, vocab=None):
         features: unique vocab words in sentences
 
     """
-    sentences = [clean_sentence(sentence) for sentence in sentences]
+    sentences = [sentence.lower() for sentence in sentences]
     len_s = len(sentences)
     features = []
+
+    # Remove non-word characters
+    sentences = [re.sub(r'\W+', ' ', sentence) for sentence in sentences]
 
     # Get features
     if vocab is not None:
