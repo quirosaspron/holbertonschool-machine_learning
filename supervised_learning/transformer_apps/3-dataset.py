@@ -30,8 +30,8 @@ class Dataset:
         self.data_train = self.data_train.shuffle(20000)
         self.data_train = self.data_train.padded_batch(
             batch_size, padded_shapes=([None], [None]))
-        self.data_train = self.data_train.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
-
+        self.data_train = self.data_train.prefetch(
+            buffer_size=tf.data.experimental.AUTOTUNE)
 
         # Update data_valid: Filter and split
         self.data_valid = self.data_valid.map(self.tf_encode)
@@ -92,4 +92,4 @@ class Dataset:
                                     Tout=[tf.int64, tf.int64])
         pt_tensor = tf.ensure_shape(tf_encoder[0], [None])
         en_tensor = tf.ensure_shape(tf_encoder[1], [None])
-        return pt_tensor, en_tensor 
+        return pt_tensor, en_tensor
