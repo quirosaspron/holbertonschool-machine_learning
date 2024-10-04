@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Loads and preps a dataset for machine translation"""
-import tensorflow as tf
 import tensorflow_datasets as tfds
 import transformers
 
