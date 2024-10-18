@@ -12,8 +12,8 @@ NST = __import__('9-neural_style').NST
 
 
 if __name__ == '__main__':
-    style_image = mpimg.imread("starry_night.jpg")
-    content_image = mpimg.imread("golden_gate.jpg")
+    style_image = mpimg.imread("andy_warhol.jpg")
+    content_image = mpimg.imread("mambo.jpg")
 
     # Reproducibility
     SEED = 0
