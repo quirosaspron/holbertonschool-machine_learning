@@ -14,6 +14,6 @@ def epsilon_greedy(Q, state, epsilon):
     if p > epsilon:  # Exploitation
         action = np.argmax(Q[state, :])
     else:  # Exploration
-        action = np.random.randint(0, 3)
+        action = np.random.randint(0, 4)
 
     return action
