@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """initializes the Q-table:"""
-import gymnasium as gym
 import numpy as np
 
 
