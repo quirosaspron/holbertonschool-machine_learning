@@ -29,5 +29,7 @@ def play(env, Q, max_steps=100):
         state = new_state
         steps += steps
 
+    # Render the final state after the episode ends
+    render_outputs.append(env.render())
     env.close()
     return rewards, render_outputs
