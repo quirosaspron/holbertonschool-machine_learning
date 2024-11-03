@@ -22,27 +22,21 @@ class EnvProc(Processor):
 
     def process_observation(self, observation):
         """ Converts the observation to numpy array
-
-        - observation ...... environment observation
-
+        observation: The environment observation
         Returns: The numpy observation
         """
         return np.array(observation)
 
     def process_state_batch(self, batch):
         """ Normaalizes the pixel values ofa batch of states
-
-        - batch ......... batch of states
-
+        batch: batch of states
         Returns: Normalized batch of states
         """
         return np.array(batch, dtype=np.float32) / 255.0
 
     def process_reward(self, reward):
         """ Clip the reward to be within the range [-1,1]
-
-        - reward ......... Environment's reward
-
+        reward: Environment's reward
         Returns: Clipped reward
         """
         return np.clip(reward, -1, 1)
@@ -55,29 +49,23 @@ class CWrapper(gym.Wrapper):
 
     def step(self, action):
         """ Take a step in the env using the given action
+        action: action to be taken in the environment
 
-        - action ........ action to be taken in the environment
-
-        Returns:
-        - observation .... obs from env after action taken
-        - reward ......... reward obtain after taking the action
-        - done ........... bool indicating whether episode has ended
-        - info ........... additional information from the environment
+        Returns
+        observation: observation from env after action taken
+        reward: reward obtain after taking the action
+        done: bool indicating whether episode has ended
+        info: additional information from the environment
         """
         obs, r, term, truncated, info = self.env.step(action)
 
-        # Return in keras-rl expected format
         return obs, r, term or truncated, info
 
     def reset(self, **kwargs):
         """ Resets the evironment and returns the observation
-
-        - kwargs ...... any additional needed parameters
-
         Returns:
-        - initial obs of the env
+        initial observation of the env
         """
-        # Keras-RL expects only the observation
         return self.env.reset(**kwargs)[0]
 
 
@@ -96,11 +84,10 @@ def __set_up_env(envname="ALE/Breakout-v5"):
 
 def __build_agent_cnn(iS, nactions):
     """ Builds a CNN to process the game frames
-        - iS ......... input shape for the model
-        - nactinos ... number of possible actions for the model to perform
-
-        Returns:
-        - model
+    iS: input shape for the model
+    nactinos: number of possible actions for the model to perform
+    Returns:
+    model
     """
     model = Sequential()
 
@@ -122,10 +109,10 @@ def __build_agent_cnn(iS, nactions):
 
 def __set_up_DQN_agent(ws, nba, cnnmodel, ti):
     """ Sets up the DQN agent
-        - ws ......... determines how many frames make up a state
-        - nba ........ number of possible actions to perform
-        - cnnmodel ... cnn model to process game frames
-        - ti ......... how frequently the to update the CNN
+    ws: determines how many frames make up a state
+    nba: number of possible actions to perform
+    cnnmodel: cnn model to process game frames
+    ti: how frequently the to update the CNN
     """
     # 1. Set memory limit and policy to use
     memory = SequentialMemory(limit=1000000, window_length=ws)
