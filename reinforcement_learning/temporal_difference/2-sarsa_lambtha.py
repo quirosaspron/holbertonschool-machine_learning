@@ -42,6 +42,7 @@ def sarsa_lambtha(
             return np.argmax(Q[state])
 
     for episode in range(episodes):
+        np.random.seed(episode)
         # Reset the environment to start a new episode
         state = env.reset()
         if isinstance(state, tuple):
