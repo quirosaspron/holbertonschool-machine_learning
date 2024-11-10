@@ -3,10 +3,6 @@
 import numpy as np
 
 
-import gym
-import numpy as np
-
-
 def generate_episode(env, policy, max_steps):
     """
     Generates an episode using policy
