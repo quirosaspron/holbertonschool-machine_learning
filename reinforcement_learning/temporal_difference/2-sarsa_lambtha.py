@@ -2,101 +2,67 @@
 """
 Defines function to perform the SARSA(λ) algorithm
 """
-
-
-import gym
 import numpy as np
 
 
-def epsilon_greedy(Q, state, epsilon):
+def sarsa_lambtha(env, Q, lambtha, episodes=5000, max_steps=100,
+                  alpha=0.1, gamma=0.99, epsilon=1,
+                  min_epsilon=0.1, epsilon_decay=0.05):
     """
-    Uses epsilon-greedy to determine if the reinforcement learning is
-       exploring or exploiting and uses to get action
+    Performs the SARSA(λ) algorithm to update the Q table.
 
-    parameters:
-        Q [numpy.ndarray of shape (s, a)]: contains the Q table
-        state: the current state
-        epsilon: the threshold for epsilon-greedy
+    Parameters:
+    - env: The environment instance.
+    - Q: A numpy.ndarray of shape (s, a) containing the Q table.
+    - lambtha: The eligibility trace factor.
+    - episodes: Total number of episodes to train over.
+    - max_steps: Maximum number of steps per episode.
+    - alpha: Learning rate.
+    - gamma: Discount rate.
+    - epsilon: Initial threshold for epsilon-greedy policy.
+    - min_epsilon: Minimum value that epsilon should decay to.
+    - epsilon_decay: Decay rate for epsilon.
 
-    returns:
-        the action to take
+    Returns:
+    - Q: The updated Q table.
     """
-    # determine exploring-exploiting balance by comparing to epsilon
-    if np.random.uniform(0, 1) < epsilon:
-        # exploring
-        action = np.random.randint(Q.shape[1])
-    else:
-        # exploiting
-        action = np.argmax(Q[state, :])
-    return action
+    n_states, n_actions = Q.shape
 
-
-def sarsa_lambtha(env, Q, lambtha, episodes=5000, max_steps=100, alpha=0.1,
-                  gamma=0.99, epsilon=1, min_epsilon=0.1, epsilon_decay=0.05):
-    """
-    Performs the SARSA(λ) algorithm
-
-    parameters:
-        env: the openAI environment instance
-        Q [numpy.ndarray of shape(s, a)]: contains the Q table
-        lambtha: the eligibility trace factor
-        episodes [int]: total number of episodes to train over
-        max_steps [int]: the maximum number of steps per episode
-        alpha [float]: the learning rate
-        gamma [float]: the discount rate
-        epsilon: the initial threshold for epsilon greedy
-        min_epsilon [float]: the minimum value that epsilon should decay to
-        epsilon_decay [float]: decay rate for updating epsilon between episodes
-
-    returns:
-        Q: the updated Q table
-    """
-    # set maximum epsilon to the current epsilon before epsilon_decay
-    max_epsilon = epsilon
-    # Sets the eligibility traces to numpy array of zeros of same shape as Q
-    Et = np.zeros((Q.shape))
-    # iterate over all episodes
-    for ep in range(episodes):
-        # set the initial state of each episode to environment reset
+    def epsilon_greedy_policy(state, epsilon):
+        """ Selects an action using epsilon-greedy policy. """
+        if np.random.rand() < epsilon:
+            return np.random.choice(n_actions)  # Explore: random action
+        else:
+            return np.argmax(Q[state])          # Exploit: best action
+    for episode in range(episodes):
+        # Reset the environment and initialize the eligibility trace
         state = env.reset()
-        # get the action from epsilon-greedy function
-        action = epsilon_greedy(Q, state, epsilon)
-        # iterate up to maximum number of steps per episode
+        # Handle cases where env.reset() returns a tuple
+        if isinstance(state, tuple):
+            state = state[0]
+        eligibility_trace = np.zeros_like(Q)
+        # Choose action using epsilon-greedy policy
+        action = epsilon_greedy_policy(state, epsilon)
         for step in range(max_steps):
-            # eligibility traces updated with lambda & gamma
-            Et = Et * lambtha * gamma
-            # increase Et for current state, action
-            Et[state, action] += 1
-
-            # perform the action to get next_state, reward, done, and info
-            next_state, reward, done, info = env.step(action)
-            # update the action, using epsilon-greedy again
-            next_action = epsilon_greedy(Q, state, epsilon)
-
-            # if the algorithm finds a hole, the reward is updated to -1
-            if env.desc.reshape(env.observation_space.n)[next_state] == b'H':
-                reward = -1
-            # if the algorithm finds the goal, the reward is updated to 1
-            if env.desc.reshape(env.observation_space.n)[next_state] == b'G':
-                reward = 1
-
-            # calculate delta_t
-            # delta_t = R(t + 1) + gamma * Q(St + 1, At + 1) - Q(St, At)
-            delta_t = reward + (
-                gamma * Q[next_state, next_action]) - Q[state, action]
-            # upddate Q table
-            # Q(st) = Q(st) + alpha * delta_t * Et(St)
-            Q[state, action] = Q[state, action] + (
-                alpha * delta_t * Et[state, action])
-            # if done, break out of episode
+            # Take action, observe reward and next state
+            next_state, reward, done, _ = env.step(action)
+            if isinstance(next_state, tuple):
+                next_state = next_state[0]
+            # Choose next action using epsilon-greedy policy
+            next_action = epsilon_greedy_policy(next_state, epsilon)
+            # Calculate the TD error (δ)
+            td_error = reward + (
+                    gamma * Q[next_state, next_action] - Q[state, action])
+            # Update the eligibility trace for the state-action pair
+            eligibility_trace[state, action] += 1
+            # Update Q values and eligibility traces for all state-action pairs
+            Q += alpha * td_error * eligibility_trace
+            eligibility_trace *= gamma * lambtha  # Decay eligibility traces
+            # Transition to the next state and action
+            state, action = next_state, next_action
+            # End episode if done
             if done:
                 break
-            # otherwise, reset state, action and continue
-            state = next_state
-            action = next_action
-        # after each epsiode, update epsilon to decay
-        # epsilon will now favor slightly more exploitation than exploration
-        epsilon = min_epsilon + (
-            (max_epsilon - min_epsilon) * np.exp(-epsilon_decay * ep))
-    # when all episodes completed, return updated Q table
+        # Decay epsilon
+        epsilon = max(min_epsilon, epsilon * (1 - epsilon_decay))
     return Q
