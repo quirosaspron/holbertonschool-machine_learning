@@ -2,7 +2,6 @@
 """
 takes two DataFrames as input and performs some actions
 """
-import pandas as pd
 
 
 def hierarchy(df1, df2):
