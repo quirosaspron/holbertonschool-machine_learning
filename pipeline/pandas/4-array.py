@@ -2,7 +2,7 @@
 """
 takes a pd.DataFrame as input and performs some actions
 """
-import pandas as pd
+#import pandas as pd
 
 
 def array(df):
