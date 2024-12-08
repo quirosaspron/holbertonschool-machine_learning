@@ -11,11 +11,22 @@ def availableShips(passengerCount):
     returns: the ships that are qualified based on passanger count
     """
     qualified_ships = []
-    ships = requests.get('https://swapi-api.hbtn.io/api/starships').json()
-    ships = ships.get("results", [])
-    ship_passengers = [[entry['name'], entry['passengers'].replace(',', '')]
-                       for entry in ships]
-    for ship in ship_passengers:
-        if ship[1].isdigit() and int(ship[1]) >= passengerCount:
-            qualified_ships.append(ship[0])
+    url = 'https://swapi-api.hbtn.io/api/starships'
+    while url:
+        # Fetch current page of results
+        response = requests.get(url).json()
+
+        # Extract ships from current page
+        ships = response.get("results", [])
+
+        # Process the ships
+        for ship in ships:
+            passengers = ship['passengers'].replace(',', '')
+            if passengers.isdigit():
+                if int(passengers) >= passengerCount:
+                    qualified_ships.append(ship['name'])
+
+        # Move to the next page
+        url = response.get('next')
+
     return qualified_ships
